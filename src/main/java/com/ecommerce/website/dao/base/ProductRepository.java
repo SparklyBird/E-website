@@ -1,6 +1,6 @@
-package com.ecommerce.website.repository;
+package com.ecommerce.website.dao.base;
 
-import com.ecommerce.website.model.Product;
+import com.ecommerce.website.model.base.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {

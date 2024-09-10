@@ -1,25 +1,23 @@
 package com.ecommerce.website.controller;
 
-import com.ecommerce.website.model.*;
-import com.ecommerce.website.repository.*;
-import lombok.AllArgsConstructor;
+import com.ecommerce.website.dao.base.CategoryRepository;
+import com.ecommerce.website.dao.base.ProductRepository;
+import com.ecommerce.website.model.base.Category;
+import com.ecommerce.website.model.base.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private  ProductRepository productRepository;
-    private  CategoryRepository categoryRepository;
+    private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    public AdminController(ProductRepository productRepository,
-                           CategoryRepository categoryRepository) {
+    public AdminController(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }

@@ -1,6 +1,6 @@
-package com.ecommerce.website.repository;
+package com.ecommerce.website.dao.base;
 
-import com.ecommerce.website.model.Category;
+import com.ecommerce.website.model.base.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {

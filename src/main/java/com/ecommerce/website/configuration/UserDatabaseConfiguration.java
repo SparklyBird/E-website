@@ -1,6 +1,5 @@
 package com.ecommerce.website.configuration;
 
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -19,7 +18,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.ecommerce.website.dao.user",
+        basePackages = "com.ecommerce.website.dao",
         entityManagerFactoryRef = "userEntityManager",
         transactionManagerRef = "userTransactionManager")
 public class UserDatabaseConfiguration {
@@ -37,7 +36,7 @@ public class UserDatabaseConfiguration {
             @Qualifier("userDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.ecommerce.website.model.user")
+                .packages("com.ecommerce.website.model")
                 .persistenceUnit("user")
                 .build();
     }

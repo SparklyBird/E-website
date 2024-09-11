@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
+    private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public AdminController(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
@@ -30,43 +30,56 @@ public class AdminController {
     public String adminDashboard(Model model) {
         model.addAttribute("products", productRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("users", userRepository.findAll());
         return "admin/dashboard";
-    }
-
-    @GetMapping("/addUser")
-    public String addUserForm(Model model) {
-        model.addAttribute("user", new User());  // Adds an empty User object to the form
-        return "admin/addUser";  // Returns the user creation form
-    }
-
-    @PostMapping("/addUser")
-    public String addUserSubmit(@ModelAttribute User user) {
-        userRepository.save(user);  // Save the submitted user to the database
-        return "redirect:/admin";  // Redirect back to admin dashboard
     }
 
     @GetMapping("/addProduct")
     public String addProductForm(Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());  // Fetches all categories for the product form
-        model.addAttribute("product", new Product());  // Adds an empty Product to the form
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("product", new Product());
         return "admin/addProduct";
     }
 
     @PostMapping("/addProduct")
     public String addProductSubmit(@ModelAttribute Product product) {
-        productRepository.save(product);  // Save the submitted product to the database
+        productRepository.save(product);
         return "redirect:/admin";
     }
 
     @GetMapping("/addCategory")
     public String addCategoryForm(Model model) {
-        model.addAttribute("category", new Category());  // Adds an empty Category to the form
+        model.addAttribute("category", new Category());
         return "admin/addCategory";
     }
 
     @PostMapping("/addCategory")
     public String addCategorySubmit(@ModelAttribute Category category) {
-        categoryRepository.save(category);  // Save the submitted category to the database
+        categoryRepository.save(category);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/deleteUser")
+    public String deleteUser(@RequestParam String email) {
+        userRepository.deleteByEmail(email);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/deleteProduct")
+    public String deleteProduct(@RequestParam String name) {
+        Product product = productRepository.findByName(name);
+        if (product != null) {
+            productRepository.delete(product);
+        }
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/deleteCategory")
+    public String deleteCategory(@RequestParam String name) {
+        Category category = categoryRepository.findByName(name);
+        if (category != null) {
+            categoryRepository.delete(category);
+        }
         return "redirect:/admin";
     }
 }

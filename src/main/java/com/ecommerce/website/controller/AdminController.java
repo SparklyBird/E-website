@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private ProductRepository productRepository;
-    private CategoryRepository categoryRepository;
-    private UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public AdminController(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository) {

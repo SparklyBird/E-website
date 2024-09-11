@@ -2,10 +2,10 @@ package com.ecommerce.website.controller;
 
 import com.ecommerce.website.dao.base.CategoryRepository;
 import com.ecommerce.website.dao.base.ProductRepository;
-import com.ecommerce.website.dao.base.UserRepository;
+import com.ecommerce.website.dao.user.UserRepository;
 import com.ecommerce.website.model.base.Category;
 import com.ecommerce.website.model.base.Product;
-import com.ecommerce.website.model.base.User;
+import com.ecommerce.website.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

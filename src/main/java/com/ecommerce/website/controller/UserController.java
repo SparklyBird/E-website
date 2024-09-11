@@ -4,7 +4,7 @@ import com.ecommerce.website.configuration.auth.TokenProvider;
 import com.ecommerce.website.dto.JwtDto;
 import com.ecommerce.website.dto.SignInDto;
 import com.ecommerce.website.dto.SignUpDto;
-import com.ecommerce.website.model.User;
+import com.ecommerce.website.model.user.User;
 import com.ecommerce.website.exception.InvalidJwtException;
 import com.ecommerce.website.service.UserService;
 import jakarta.validation.Valid;

@@ -1,9 +1,9 @@
 package com.ecommerce.website.service;
 
 import com.ecommerce.website.dto.SignUpDto;
-import com.ecommerce.website.model.User;
+import com.ecommerce.website.model.user.User;
 import com.ecommerce.website.exception.InvalidJwtException;
-import com.ecommerce.website.dao.UserRepository;
+import com.ecommerce.website.dao.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

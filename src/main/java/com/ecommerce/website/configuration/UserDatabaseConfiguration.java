@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.ecommerce.website.dao",
+        basePackages = "com.ecommerce.website.dao.user",
         entityManagerFactoryRef = "userEntityManager",
         transactionManagerRef = "userTransactionManager")
 public class UserDatabaseConfiguration {
@@ -36,7 +36,7 @@ public class UserDatabaseConfiguration {
             @Qualifier("userDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.ecommerce.website.model")
+                .packages("com.ecommerce.website.model.user")
                 .persistenceUnit("user")
                 .build();
     }

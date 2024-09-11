@@ -1,4 +1,4 @@
-package com.ecommerce.website.model;
+package com.ecommerce.website.model.user;
 
 import com.ecommerce.website.enums.UserRole;
 import jakarta.persistence.Column;

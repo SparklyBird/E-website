@@ -18,8 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {
-    @Autowired
+
     SecurityFilter securityFilter;
+
+    @Autowired
+    public AuthConfig(SecurityFilter securityFilter)
+    {
+        this.securityFilter = securityFilter;
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -27,6 +33,7 @@ public class AuthConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/*").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

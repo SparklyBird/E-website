@@ -1,6 +1,6 @@
 package com.ecommerce.website.configuration.auth;
 
-import com.ecommerce.website.dao.UserRepository;
+import com.ecommerce.website.dao.user.UserRepository;
 import com.ecommerce.website.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

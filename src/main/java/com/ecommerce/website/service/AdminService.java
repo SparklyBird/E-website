@@ -34,6 +34,6 @@ public class AdminService {
     }
 
     public Page<User> searchUsers(String search, Pageable pageable) {
-        return userRepository.findByUsernameContaining(search, pageable);
+        return userRepository.findByLoginContaining(search, pageable);
     }
 }

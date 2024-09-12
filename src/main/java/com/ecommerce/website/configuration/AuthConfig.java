@@ -35,8 +35,20 @@ public class AuthConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/images/**").permitAll()  // Allow access to static images
-                        .requestMatchers(HttpMethod.POST, "/api/auth/*").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*").permitAll()
                         .anyRequest().authenticated())
+                /*.formLogin((form) -> form
+                        .loginPage("/auth/login")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/auth/login?error=true")
+                        .permitAll()
+                )
+                .logout((logout) -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/auth/login")
+                        .permitAll()
+                )*/
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

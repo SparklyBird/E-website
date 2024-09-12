@@ -42,15 +42,15 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             try {
                 String login = tokenService.extractLogin(token);
+
                 Optional<User> user = userRepository.findByLogin(login);
 
-                if (user.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null &&
-                        tokenService.validateToken(token, user.get())) {
+                if (user.isPresent() && tokenService.validateToken(token, user.get())) {
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 user.get(), null, user.get().getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
-                    }
+                }
 
             } catch (Exception e) {
                 log.error("Authentication error: ", e);

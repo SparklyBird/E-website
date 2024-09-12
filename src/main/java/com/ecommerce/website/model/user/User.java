@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,20 +18,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity(name = "user")
 public class User implements UserDetails {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String login;
 
     private String password;
 
-    @Getter
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -70,6 +71,7 @@ public class User implements UserDetails {
         return login;
     }
 
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -88,10 +90,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
     }
 }

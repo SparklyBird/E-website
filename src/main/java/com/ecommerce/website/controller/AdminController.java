@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,6 @@ public class AdminController {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
-    private final AdminService adminService;
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
@@ -37,7 +35,6 @@ public class AdminController {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
-        this.adminService = adminService;
     }
 
     @GetMapping

@@ -61,7 +61,7 @@ public class AdminController {
 
     @PostMapping("/deleteUser")
     public String deleteUser(@RequestParam String email) {
-        userRepository.deleteByEmail(email);
+        //userRepository.deleteByEmail(email);
         return "redirect:/admin";
     }
 

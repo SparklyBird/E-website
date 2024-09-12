@@ -13,38 +13,40 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">Homepage</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/categories/1}">Books</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/categories/2}">Coffee Mugs</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/categories/3}">Mouse Pads</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/categories/4}">Luggage Tags</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/categories/5}">Apparel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/categories/6}">Footwear</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+    <a th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Logo" style="max-width: 70px; max-height: 70px;">
+    </a>
 
-    <p th:text="'Time on the server is ' + ${theDate}"></p>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">Homepage</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/1}">Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/2}">Coffee Mugs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/3}">Mouse Pads</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/4}">Luggage Tags</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/5}">Apparel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/6}">Footwear</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
 </body>
 

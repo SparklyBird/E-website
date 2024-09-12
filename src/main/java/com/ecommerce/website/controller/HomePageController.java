@@ -12,11 +12,6 @@ public class HomePageController {
 
     @GetMapping("/")
     public String homePage(Model theModel) {
-
-        theModel.addAttribute("theDate", new java.util.Date());
-
-        logger.info("in homepage and date shows as " + theModel.getAttribute("theDate"));
-
         return "homePage";
     }
 }

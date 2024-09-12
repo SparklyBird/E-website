@@ -81,6 +81,23 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/addUser")
+    public String addUserForm(Model model) {
+        model.addAttribute("user", new User());
+        return "admin/addUser";
+    }
+
+    @PostMapping("/addUser")
+    public String addUserSubmit(@ModelAttribute User user) {
+        try {
+            userRepository.save(user);
+            return "redirect:/admin";
+        } catch (Exception e) {
+            logger.error("Error adding user", e);
+            return "error";
+        }
+    }
+
     @PostMapping("/deleteUser")
     public String deleteUser(@RequestParam Long id) {
         try {
@@ -111,3 +128,4 @@ public class AdminController {
         return "redirect:/admin";
     }
 }
+

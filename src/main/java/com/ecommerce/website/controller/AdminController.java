@@ -63,6 +63,30 @@ public class AdminController {
         return "admin/dashboard";
     }
 
+    @PostMapping("/delete")
+    public String deleteItem(@RequestParam String type, @RequestParam Long id) {
+        try {
+            switch (type.toLowerCase()) {
+                case "product":
+                    productRepository.deleteById(id);
+                    break;
+                case "category":
+                    categoryRepository.deleteById(id);
+                    break;
+                case "user":
+                    userRepository.deleteById(id);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid type: " + type);
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting " + type + " with ID " + id, e);
+            return "error";
+        }
+        return "redirect:/admin";
+    }
+
+
     @GetMapping("/addProduct")
     public String addProductForm(Model model) {
         model.addAttribute("categories", categoryRepository.findAll());

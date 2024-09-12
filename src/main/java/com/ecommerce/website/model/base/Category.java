@@ -1,5 +1,6 @@
 package com.ecommerce.website.model.base;
 
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -19,4 +20,7 @@ public class Category {
     private String name;
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
+
+    @OneToMany(mappedBy = "category")
+    private List<Attribute> attributes;
 }

@@ -11,14 +11,19 @@ import javax.sql.DataSource;
 @Component
 public class SchemaInitializer {
     private final DataSource baseDataSource;
+    private final DataSource userDataSource;
 
-    public SchemaInitializer(@Qualifier("baseDataSource") DataSource baseDataSource) {
+    public SchemaInitializer(@Qualifier("baseDataSource") DataSource baseDataSource,
+                             @Qualifier("userDataSource") DataSource userDataSource) {
         this.baseDataSource = baseDataSource;
+        this.userDataSource = userDataSource;
     }
 
     @PostConstruct
     public void initialize() {
-        executeSchemaScript(baseDataSource, "schema-base.sql");
+//        executeSchemaScript(userDataSource, "schema-user.sql");
+//        executeSchemaScript(baseDataSource, "schema-base-product-and-categories.sql");
+//        executeSchemaScript(baseDataSource, "schema-base-attributes.sql");
     }
 
     private void executeSchemaScript(DataSource dataSource, String script) {

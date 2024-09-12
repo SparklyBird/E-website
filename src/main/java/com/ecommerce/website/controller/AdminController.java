@@ -3,12 +3,17 @@ package com.ecommerce.website.controller;
 import com.ecommerce.website.dao.base.CategoryRepository;
 import com.ecommerce.website.dao.base.ProductRepository;
 import com.ecommerce.website.dao.user.UserRepository;
+import com.ecommerce.website.service.AdminService;
 import com.ecommerce.website.model.base.Category;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,25 +25,44 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final AdminService adminService;
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
-    public AdminController(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
+    public AdminController(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, AdminService adminService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.adminService = adminService;
     }
 
     @GetMapping
-    public String adminDashboard(Model model) {
-        model.addAttribute("products", productRepository.findAll());
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("users", userRepository.findAll());
+    public String adminDashboard(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = (search != null && !search.isEmpty()) ?
+                productRepository.findByNameContaining(search, pageable) :
+                productRepository.findAll(pageable);
+        Page<Category> categoryPage = (search != null && !search.isEmpty()) ?
+                categoryRepository.findByNameContaining(search, pageable) :
+                categoryRepository.findAll(pageable);
+        Page<User> userPage = (search != null && !search.isEmpty()) ?
+                userRepository.findByLoginContaining(search, pageable) :
+                userRepository.findAll(pageable);
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("categoryPage", categoryPage);
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("search", search);
+
         return "admin/dashboard";
     }
 
@@ -128,4 +152,3 @@ public class AdminController {
         return "redirect:/admin";
     }
 }
-

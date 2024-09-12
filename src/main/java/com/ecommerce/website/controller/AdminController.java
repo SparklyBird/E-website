@@ -6,10 +6,16 @@ import com.ecommerce.website.dao.user.UserRepository;
 import com.ecommerce.website.model.base.Category;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.model.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/admin")
@@ -18,6 +24,8 @@ public class AdminController {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     public AdminController(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
@@ -42,9 +50,23 @@ public class AdminController {
     }
 
     @PostMapping("/addProduct")
-    public String addProductSubmit(@ModelAttribute Product product) {
-        productRepository.save(product);
-        return "redirect:/admin";
+    public String addProductSubmit(@ModelAttribute Product product, @RequestParam("image") MultipartFile file) {
+        try {
+            if (!file.isEmpty()) {
+                // Handle file upload
+                String fileName = file.getOriginalFilename();
+                String filePath = "static/images/" + fileName;
+                File targetFile = new File(filePath);
+                file.transferTo(targetFile);
+                product.setImageUrl(filePath);
+            }
+
+            productRepository.save(product);
+            return "redirect:/admin";
+        } catch (IOException e) {
+            logger.error("Error uploading product image", e);
+            return "error";
+        }
     }
 
     @GetMapping("/addCategory")
@@ -60,25 +82,31 @@ public class AdminController {
     }
 
     @PostMapping("/deleteUser")
-    public String deleteUser(@RequestParam String email) {
-        //userRepository.deleteByEmail(email);
+    public String deleteUser(@RequestParam Long id) {
+        try {
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            logger.error("Error deleting user with ID " + id, e);
+        }
         return "redirect:/admin";
     }
 
     @PostMapping("/deleteProduct")
-    public String deleteProduct(@RequestParam String name) {
-        Product product = productRepository.findByName(name);
-        if (product != null) {
-            productRepository.delete(product);
+    public String deleteProduct(@RequestParam Long id) {
+        try {
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            logger.error("Error deleting product with ID " + id, e);
         }
         return "redirect:/admin";
     }
 
     @PostMapping("/deleteCategory")
-    public String deleteCategory(@RequestParam String name) {
-        Category category = categoryRepository.findByName(name);
-        if (category != null) {
-            categoryRepository.delete(category);
+    public String deleteCategory(@RequestParam Long id) {
+        try {
+            categoryRepository.deleteById(id);
+        } catch (Exception e) {
+            logger.error("Error deleting category with ID " + id, e);
         }
         return "redirect:/admin";
     }

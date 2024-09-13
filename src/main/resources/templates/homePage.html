@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <!-- Required meta tags -->
@@ -13,9 +14,19 @@
 </head>
 
 <body>
-    <a th:href="@{/}">
-        <img th:src="@{/images/logo.png}" alt="Logo" style="max-width: 70px; max-height: 70px;">
-    </a>
+<div class="d-flex align-items-center w-100">
+    <div class="me-3">
+        <a th:href="@{/}">
+            <img th:src="@{/images/logo.png}" alt="Logo" style="max-width: 70px; max-height: 70px;">
+        </a>
+    </div>
+    <div class="flex-grow-1">
+        <form th:action="@{/}" method="get" class="d-flex">
+            <input type="text" th:name="search" class="form-control me-2" placeholder="Not working yet :(" aria-label="Search" style="max-width: 450px;">
+            <button type="submit" class="btn btn-outline-success">Search</button>
+        </form>
+    </div>
+</div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
@@ -43,8 +54,17 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/api/products/category/6}">Footwear</a>
                     </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
+                    </li>
                 </ul>
             </div>
+            <a sec:authorize="isAnonymous()" th:href="@{/login}">
+                Login
+            </a>
+            <form sec:authorize="isAuthenticated()" action="#" th:action="@{/auth/logout}" method="POST">
+                <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
+            </form>
         </div>
     </nav>
 

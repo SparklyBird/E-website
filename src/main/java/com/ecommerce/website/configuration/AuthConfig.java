@@ -18,6 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class AuthConfig {
 
+    private String ADMIN = "ADMIN";
+
     SecurityFilter securityFilter;
 
     @Autowired
@@ -34,8 +36,9 @@ public class AuthConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/images/**").permitAll()  // Allow access to static images
+                        .requestMatchers("/api/products/**").permitAll()  // Allow access to static images
                         .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*").permitAll()
-                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole(ADMIN)
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
                         .loginPage("/auth/login")

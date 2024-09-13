@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 
 import java.util.List;
@@ -26,6 +28,12 @@ public class ProductService {
 
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    public List<Product> getRandomProducts() {
+        List<Product> allProducts = productRepository.findAll();
+        Collections.shuffle(allProducts); // Shuffle to randomize
+        return allProducts.stream().limit(8).collect(Collectors.toList()); // Return only 8
     }
 }
 

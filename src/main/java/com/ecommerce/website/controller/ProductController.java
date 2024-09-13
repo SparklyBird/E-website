@@ -34,7 +34,7 @@ public class ProductController {
             ("/category/{id}")
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "24") int size,
                                         Model model) {
 
 

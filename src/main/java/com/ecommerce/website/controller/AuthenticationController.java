@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
     public AuthenticationController(AuthenticationService authenticationService) {
@@ -22,12 +22,12 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // Points to login.html in templates
+        return "user/login"; // Points to login.html in templates
     }
 
     @GetMapping("/register")
     public String registerPage() {
-        return "register"; // Points to register.html in templates
+        return "user/register"; // Points to register.html in templates
     }
 
     @PostMapping("/register")

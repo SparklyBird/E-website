@@ -1,4 +1,4 @@
-package com.ecommerce.website.configuration;
+package com.ecommerce.website.configuration.database;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Qualifier;

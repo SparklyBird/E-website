@@ -2,8 +2,8 @@ package com.ecommerce.website.service;
 
 import com.ecommerce.website.dao.user.UserProfileRepository;
 import com.ecommerce.website.dao.user.UserRepository;
-import com.ecommerce.website.model.user.UserProfile;
 import com.ecommerce.website.model.user.User;
+import com.ecommerce.website.model.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class UserProfileService {
 
     private final UserProfileRepository userProfileRepository;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserProfileService(UserProfileRepository userProfileRepository, UserRepository userRepository) {

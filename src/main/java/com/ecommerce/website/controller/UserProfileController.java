@@ -18,9 +18,8 @@ import static java.util.Optional.ofNullable;
 @RequestMapping("/api/profile")
 public class UserProfileController {
 
-    private UserProfileService userProfileService;
-
     private final UserService userService;
+    private final UserProfileService userProfileService;
 
     @Autowired
     public UserProfileController(UserProfileService userProfileService, UserService userService) {

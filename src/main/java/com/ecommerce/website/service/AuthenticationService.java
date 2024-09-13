@@ -3,7 +3,6 @@ package com.ecommerce.website.service;
 import com.ecommerce.website.dao.user.UserRepository;
 import com.ecommerce.website.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

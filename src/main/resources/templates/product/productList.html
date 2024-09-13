@@ -31,22 +31,22 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/api/products/category/1}">Books</a>
+                    <a class="nav-link" th:href="@{/products/category/1}">Books</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/api/products/category/2}">Coffee Mugs</a>
+                    <a class="nav-link" th:href="@{/products/category/2}">Coffee Mugs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/api/products/category/3}">Mouse Pads</a>
+                    <a class="nav-link" th:href="@{/products/category/3}">Mouse Pads</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/api/products/category/4}">Luggage Tags</a>
+                    <a class="nav-link" th:href="@{/products/category/4}">Luggage Tags</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/api/products/category/5}">Apparel</a>
+                    <a class="nav-link" th:href="@{/products/category/5}">Apparel</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/api/products/category/6}">Footwear</a>
+                    <a class="nav-link" th:href="@{/products/category/6}">Footwear</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
@@ -84,7 +84,7 @@
 
 <!--<div class="pagination">-->
 <!--    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">-->
-<!--        <a class="page-link" th:href="@{/api/products/category/{id}(id=${categoryId}, page=${i})}"-->
+<!--        <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}"-->
 <!--           th:text="${i + 1}"></a>-->
 <!--    </span>-->
 <!--</div>-->
@@ -94,7 +94,7 @@
 
             <!-- Previous Arrow -->
             <li th:if="${currentPage > 0}" class="page-item">
-                <a class="page-link" th:href="@{/api/products/category/{id}(id=${categoryId}, page=${currentPage - 1})}" aria-label="Previous">
+                <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${currentPage - 1})}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -102,13 +102,13 @@
             <!-- Show all pages if total pages <= 6 -->
             <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                 th:if="${totalPages <= 6}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/api/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
             <!-- First 3 pages -->
             <li th:each="i : ${#numbers.sequence(0, 2)}"
                 th:if="${totalPages > 6}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/api/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
             <!-- Dots after first 3 pages if necessary -->
@@ -119,7 +119,7 @@
             <!-- Pages around current page -->
             <li th:each="i : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
                 th:if="${currentPage > 2 && currentPage < totalPages - 3}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/api/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
             <!-- Dots before last 3 pages if necessary -->
@@ -130,12 +130,12 @@
             <!-- Last 3 pages -->
             <li th:each="i : ${#numbers.sequence(totalPages - 3, totalPages - 1)}"
                 th:if="${totalPages > 6}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/api/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
             <!-- Next Arrow -->
             <li th:if="${currentPage < totalPages - 1}" class="page-item">
-                <a class="page-link" th:href="@{/api/products/category/{id}(id=${categoryId}, page=${currentPage + 1})}" aria-label="Next">
+                <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${currentPage + 1})}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

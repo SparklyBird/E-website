@@ -1,9 +1,9 @@
 package com.ecommerce.website.service;
 
-import com.ecommerce.website.dto.SignUpDto;
-import com.ecommerce.website.model.user.User;
-import com.ecommerce.website.exception.InvalidJwtException;
 import com.ecommerce.website.dao.user.UserRepository;
+import com.ecommerce.website.dto.SignUpDto;
+import com.ecommerce.website.exception.InvalidJwtException;
+import com.ecommerce.website.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +16,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements UserDetailsService {
 
-    UserRepository repository;
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final UserRepository repository;
 
     @Autowired
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
-
-    Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Override
     public UserDetails loadUserByUsername(String username) {

@@ -8,8 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity(name = "user_profile")
-public class UserProfile
-{
+public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,8 +25,7 @@ public class UserProfile
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    public UserProfile()
-    {
+    public UserProfile() {
     }
 
     public UserProfile(Long id, String email, String phoneNumber, String lastName, String firstName, User user) {
@@ -39,8 +37,7 @@ public class UserProfile
         this.user = user;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
@@ -52,8 +49,7 @@ public class UserProfile
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 

@@ -4,8 +4,8 @@ import com.ecommerce.website.configuration.auth.TokenProvider;
 import com.ecommerce.website.dto.JwtDto;
 import com.ecommerce.website.dto.SignInDto;
 import com.ecommerce.website.dto.SignUpDto;
-import com.ecommerce.website.model.user.User;
 import com.ecommerce.website.exception.InvalidJwtException;
+import com.ecommerce.website.model.user.User;
 import com.ecommerce.website.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -23,11 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth/")
 public class UserRestController {
-    private AuthenticationManager authenticationManager;
-    private UserService service;
-    private TokenProvider tokenService;
-
-    Logger logger = LoggerFactory.getLogger(UserRestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRestController.class);
+    private final AuthenticationManager authenticationManager;
+    private final UserService service;
+    private final TokenProvider tokenService;
 
     @Autowired
     public UserRestController(AuthenticationManager authenticationManager, UserService service, TokenProvider tokenService) {
@@ -46,7 +45,7 @@ public class UserRestController {
     public ResponseEntity<JwtDto> signIn(@RequestBody @Valid SignInDto data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var authUser = authenticationManager.authenticate(usernamePassword);
-        var accessToken = tokenService.generateAccessToken((User)authUser.getPrincipal());
+        var accessToken = tokenService.generateAccessToken((User) authUser.getPrincipal());
         return ResponseEntity.ok(new JwtDto(accessToken));
     }
 }

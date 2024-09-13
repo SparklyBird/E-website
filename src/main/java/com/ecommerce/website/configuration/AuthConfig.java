@@ -36,7 +36,7 @@ public class AuthConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/images/**").permitAll()  // Allow access to static images
-                        .requestMatchers("/api/products/**").permitAll()  // Allow access to static images
+                        .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*").permitAll()
                         .requestMatchers("/admin/**").hasRole(ADMIN)
                         .anyRequest().authenticated())

@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String login;
 
     private String password;
@@ -123,28 +123,27 @@ public class User implements UserDetails {
         return password;
     }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public UserProfile getProfile() {
-        return profile;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
     }
 
     public void setRole(UserRole role) {
         this.role = role;
     }
 
+    public UserProfile getProfile() {
+        return profile;
+    }
+
     public void setProfile(UserProfile profile) {
         this.profile = profile;
     }
-}
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+}

@@ -3,10 +3,13 @@
 <head>
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container mt-5">
     <h1 class="mb-4">Admin Dashboard</h1>
+
     <section class="section mb-5">
         <h2 class="mb-3">Delete Item</h2>
         <form th:action="@{/admin/delete}" method="post" class="form">
@@ -18,53 +21,121 @@
                     <option value="user">User</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="id">ID:</label>
                 <input type="text" id="id" name="id" class="form-control" required>
             </div>
-
             <button type="submit" class="btn btn-danger">Delete</button>
         </form>
     </section>
 
     <section class="section mb-5">
+        <h2 class="mb-3">Search Items</h2>
+        <form th:action="@{/admin}" method="get" class="form">
+            <div class="form-group">
+                <input type="text" name="search" class="form-control" placeholder="Search..." th:value="${search}">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </section>
+
+    <section class="section mb-5">
         <h2 class="mb-3">Products</h2>
-        <a class="btn btn-primary mb-3" href="./admin/addProduct.html">Add Product</a>
-        <ul class="list-group">
-            <li class="list-group-item" th:each="product : ${products}">
-                <span th:text="${product.id}">ID</span> -
-                <span th:text="${product.name}">Product Name</span>
-            </li>
-        </ul>
+        <a class="btn btn-primary mb-3" th:href="@{/admin/addProduct}">Add Product</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${productPage.content}">
+                <td th:text="${product.id}">ID</td>
+                <td th:text="${product.name}">Product Name</td>
+            </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:if="${productPage.hasPrevious()}">
+                    <a class="page-link" th:href="@{/admin(page=${productPage.number - 1}, size=${productPage.size}, search=${search})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
+                    <a class="page-link" th:href="@{/admin(page=${i}, size=${productPage.size}, search=${search})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:if="${productPage.hasNext()}">
+                    <a class="page-link" th:href="@{/admin(page=${productPage.number + 1}, size=${productPage.size}, search=${search})}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </section>
 
     <section class="section mb-5">
         <h2 class="mb-3">Categories</h2>
-        <a class="btn btn-primary mb-3" href="./admin/addCategory.html">Add Category</a>
-        <ul class="list-group">
-            <li class="list-group-item" th:each="category : ${categories}">
-                <span th:text="${category.id}">ID</span> -
-                <span th:text="${category.name}">Category Name</span>
-            </li>
-        </ul>
+        <a class="btn btn-primary mb-3" th:href="@{/admin/addCategory}">Add Category</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categoryPage.content}">
+                <td th:text="${category.id}">ID</td>
+                <td th:text="${category.name}">Category Name</td>
+            </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:if="${productPage.hasPrevious()}">
+                    <a class="page-link" th:href="@{/admin/dashboard(page=${productPage.number - 1}, size=${productPage.size}, search=${search})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
+                    <a class="page-link" th:href="@{/admin/dashboard(page=${i}, size=${productPage.size}, search=${search})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:if="${productPage.hasNext()}">
+                    <a class="page-link" th:href="@{/admin/dashboard(page=${productPage.number + 1}, size=${productPage.size}, search=${search})}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </section>
 
     <section class="section mb-5">
         <h2 class="mb-3">Users</h2>
-        <a class="btn btn-primary mb-3" href="./admin/addUser.html">Add New User</a>
-        <ul class="list-group">
-            <li class="list-group-item" th:each="user : ${users}">
-                <span th:text="${user.id}">ID</span> -
-                <span th:text="${user.name}">Name</span> -
-                <span th:text="${user.surname}">Surname</span>
-            </li>
-        </ul>
+        <a class="btn btn-primary mb-3" th:href="@{/admin/addUser}">Add New User</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Login</th>
+                <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${userPage.content}">
+                <td th:text="${user.id}">ID</td>
+                <td th:text="${user.username}">Login</td>
+                <td th:text="${user.role}">Role</td>
+            </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:if="${userPage.hasPrevious()}">
+                    <a class="page-link" th:href="@{/admin(page=${userPage.number - 1}, size=${userPage.size}, search=${search})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
+                    <a class="page-link" th:href="@{/admin(page=${i}, size=${userPage.size}, search=${search})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:if="${userPage.hasNext()}">
+                    <a class="page-link" th:href="@{/admin(page=${userPage.number + 1}, size=${userPage.size}, search=${search})}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </section>
 </div>
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

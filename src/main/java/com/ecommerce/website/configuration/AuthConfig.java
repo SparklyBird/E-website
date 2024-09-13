@@ -35,6 +35,7 @@ public class AuthConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/images/**").permitAll()  // Allow access to static images
                         .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
                         .loginPage("/auth/login")

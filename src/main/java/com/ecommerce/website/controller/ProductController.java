@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
+import java.util.List;
+
 
 
 @Controller
@@ -28,11 +30,14 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/category/{id}")
+    @GetMapping
+            ("/category/{id}")
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "10") int size,
                                         Model model) {
+
+
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productService.getProductsByCategory(id, pageable);
 
@@ -44,6 +49,6 @@ public class ProductController {
         String categoryName = categoryService.getCategoryNameById(id);
         model.addAttribute("categoryName", categoryName);
 
-        return "ProductListingPage";
+        return "productList";
     }
 }

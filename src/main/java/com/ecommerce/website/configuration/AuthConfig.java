@@ -35,7 +35,7 @@ public class AuthConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/images/**").permitAll()  // Allow access to static images
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*").permitAll()
                         .requestMatchers("/admin/**").hasRole(ADMIN)
@@ -64,6 +64,6 @@ public class AuthConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 }

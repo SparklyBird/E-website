@@ -22,12 +22,12 @@ public class AuthenticationService {
 
 
     public void registerUser(String email, String password) {
-        // Check if user already exists
+
         if (userRepository.findByLogin(email).isPresent()) {
             throw new RuntimeException("User already exists");
         }
 
-        // Create and save new user
+
         User newUser = new User();
         newUser.setLogin(email);
         newUser.setPassword(passwordEncoder.encode(password));

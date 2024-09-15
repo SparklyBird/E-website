@@ -22,22 +22,23 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "user/login"; // Points to login.html in templates
+        return "user/login";
     }
 
     @GetMapping("/register")
     public String registerPage() {
-        return "user/register"; // Points to register.html in templates
+        return "user/register";
     }
 
     @PostMapping("/register")
     public String register(@RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes) {
         try {
             authenticationService.registerUser(email, password);
-            return "redirect:/login"; // Redirect to login page on successful registration
+            redirectAttributes.addFlashAttribute("success", "Registration successful. Please log in.");
+            return "redirect:/login";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Registration failed.");
-            return "redirect:/register?error"; // Redirect back to register page with error message
+            return "redirect:/register?error";
         }
     }
 }

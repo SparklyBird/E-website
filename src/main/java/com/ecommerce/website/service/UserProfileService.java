@@ -22,29 +22,29 @@ public class UserProfileService {
         this.userRepository = userRepository;
     }
 
-    // Get a user profile by user ID
+
     public Optional<UserProfile> getProfileByUserId(Long userId) {
         return userProfileRepository.findByUserId(userId);
     }
 
-    // Create or update a user profile
+
     public UserProfile saveUserProfile(UserProfile userProfile) {
         return userProfileRepository.save(userProfile);
     }
 
-    // Find a user profile by profile ID
+
     public Optional<UserProfile> findById(Long profileId) {
         return userProfileRepository.findById(profileId);
     }
 
-    // Create a new profile for a user
+
     public UserProfile createUserProfile(Long userId, UserProfile newProfile) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
-        newProfile.setUser(user.get()); // Set the user for the profile
-        return userProfileRepository.save(newProfile); // Save the profile
+        newProfile.setUser(user.get());
+        return userProfileRepository.save(newProfile);
     }
 
     // Updates the profile

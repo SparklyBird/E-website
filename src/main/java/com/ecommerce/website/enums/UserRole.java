@@ -21,7 +21,7 @@ public enum UserRole {
     @JsonCreator
     public static UserRole fromValue(String value) {
         for (UserRole role : UserRole.values()) {
-            if (role.role.equalsIgnoreCase(value)) {  // Handles case insensitivity
+            if (role.role.equalsIgnoreCase(value)) {
                 return role;
             }
         }

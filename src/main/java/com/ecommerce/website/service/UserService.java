@@ -25,11 +25,13 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username)
+    {
         return repository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
-    public User findByUsername(String username) {
+    public User findByUsername(String username)
+    {
         return repository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 

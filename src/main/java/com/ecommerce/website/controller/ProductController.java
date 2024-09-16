@@ -3,6 +3,7 @@ package com.ecommerce.website.controller;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.service.CategoryService;
 import com.ecommerce.website.service.ProductService;
+import com.ecommerce.website.service.ShoppingCartService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,11 +23,13 @@ public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final ShoppingCartService shoppingCartService;
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService) {
+    public ProductController(ProductService productService, CategoryService categoryService, ShoppingCartService shoppingCartService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.shoppingCartService = shoppingCartService;
     }
 
     @GetMapping
@@ -52,6 +55,7 @@ public class ProductController {
         String categoryName = categoryService.getCategoryNameById(id);
         model.addAttribute("categoryName", categoryName);
 
+        model.addAttribute("cartItemCount", shoppingCartService.count());
         return "product/productList";
     }
 }

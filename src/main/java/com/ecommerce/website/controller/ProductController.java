@@ -3,6 +3,7 @@ package com.ecommerce.website.controller;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.service.CategoryService;
 import com.ecommerce.website.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,8 +34,12 @@ public class ProductController {
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "24") int size,
-                                        Model model) {
-
+                                        HttpServletRequest request, Model model) {
+        String currentUrl = request.getRequestURI();
+        if (request.getQueryString() != null) {
+            currentUrl += "?" + request.getQueryString();
+        }
+        model.addAttribute("currentUrl", currentUrl);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productService.getProductsByCategory(id, pageable);

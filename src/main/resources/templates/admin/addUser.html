@@ -6,6 +6,7 @@
 </head>
 <body>
 <div class="container mt-5">
+    <a href="/admin" class="btn btn-secondary mb-4"><i class="fa fa-arrow-left"></i> Back</a>
     <h2 class="mb-4 text-center font-bold">Add New User</h2>
     <form th:action="@{/admin/addUser}" th:object="${user}" method="post">
         <div class="row mb-3">

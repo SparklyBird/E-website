@@ -109,6 +109,34 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/updateProduct")
+    public String showUpdateProductForm(@RequestParam Long id, Model model) {
+        Product product = adminService.findProductById(id);
+        model.addAttribute("categories", adminService.findALLCategories());
+        model.addAttribute("product", product);
+        return "admin/updateProduct";
+    }
+
+    @PostMapping("/updateProduct")
+    public String updateProductSubmit(@ModelAttribute Product product, @RequestParam("image") MultipartFile file) {
+        try {
+            if (!file.isEmpty()) {
+                // Handle file upload
+                String fileName = file.getOriginalFilename();
+                String filePath = "static/images/" + fileName;
+                File targetFile = new File(filePath);
+                file.transferTo(targetFile);
+                product.setImageUrl(filePath);
+            }
+            adminService.saveProduct(product);
+            return "redirect:/admin";
+        } catch (IOException e) {
+            logger.error("Error updating product image", e);
+            return "error";
+        }
+    }
+
+
     @GetMapping("/addCategory")
     public String addCategoryForm(Model model) {
         model.addAttribute("category", new Category());
@@ -117,6 +145,19 @@ public class AdminController {
 
     @PostMapping("/addCategory")
     public String addCategorySubmit(@ModelAttribute Category category) {
+        adminService.saveCategory(category);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/updateCategory")
+    public String showUpdateCategoryForm(@RequestParam Long id, Model model) {
+        Category category = adminService.findCategoryById(id);
+        model.addAttribute("category", category);
+        return "admin/updateCategory";
+    }
+
+    @PostMapping("/updateCategory")
+    public String updateCategorySubmit(@ModelAttribute Category category) {
         adminService.saveCategory(category);
         return "redirect:/admin";
     }
@@ -138,21 +179,75 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/deleteUser")
-    public String deleteUser(@RequestParam Long id) {
-        adminService.deleteUser(id);
-        return "redirect:/admin";
+    @GetMapping("/updateUser")
+    public String showUpdateUserForm(@RequestParam Long id, Model model) {
+        User user = adminService.findUserById(id);
+        model.addAttribute("user", user);
+        return "admin/updateUser";
+    }
+
+    @PostMapping("/updateUser")
+    public String updateUserSubmit(@ModelAttribute User user) {
+        try {
+            adminService.saveUser(user);
+            return "redirect:/admin";
+        } catch (Exception e) {
+            logger.error("Error updating user", e);
+            return "error";
+        }
+    }
+
+    @GetMapping("/deleteProduct")
+    public String showDeleteProductForm(@RequestParam Long id, Model model) {
+        Product product = adminService.findProductById(id);
+        model.addAttribute("product", product);
+        return "admin/deleteProduct";
     }
 
     @PostMapping("/deleteProduct")
     public String deleteProduct(@RequestParam Long id) {
-        adminService.deleteProduct(id);
+        try {
+            adminService.deleteProduct(id);
+        } catch (Exception e) {
+            logger.error("Error deleting product with ID " + id, e);
+            return "error";
+        }
         return "redirect:/admin";
+    }
+
+    @GetMapping("/deleteCategory")
+    public String showDeleteCategoryForm(@RequestParam Long id, Model model) {
+        Category category = adminService.findCategoryById(id);
+        model.addAttribute("category", category);
+        return "admin/deleteCategory";
     }
 
     @PostMapping("/deleteCategory")
     public String deleteCategory(@RequestParam Long id) {
-        adminService.deleteCategory(id);
+        try {
+            adminService.deleteCategory(id);
+        } catch (Exception e) {
+            logger.error("Error deleting category with ID " + id, e);
+            return "error";
+        }
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/deleteUser")
+    public String showDeleteUserForm(@RequestParam Long id, Model model) {
+        User user = adminService.findUserById(id);
+        model.addAttribute("user", user);
+        return "admin/deleteUser";
+    }
+
+    @PostMapping("/deleteUser")
+    public String deleteUser(@RequestParam Long id) {
+        try {
+            adminService.deleteUser(id);
+        } catch (Exception e) {
+            logger.error("Error deleting user with ID " + id, e);
+            return "error";
+        }
         return "redirect:/admin";
     }
 }

@@ -38,6 +38,7 @@ public class AuthConfig {
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*").permitAll()
+                        .requestMatchers("/shoppingCart/**").permitAll()
                         .requestMatchers("/admin/**").hasRole(ADMIN)
                         .anyRequest().authenticated())
                 .formLogin((form) -> form

@@ -28,7 +28,6 @@
         <button type="submit" class="button">Sign Up</button>
     </form>
 
-    <!-- Display errors if registration fails -->
     <div id="errorMessage" style="display:none;" class="alert alert-danger">
         Username already exists.
     </div>
@@ -69,7 +68,7 @@
 
             if (response.status === 201) {
 
-                window.location.href = '/login';
+                 window.location.href = '/auth/login?success=true';
             } else {
 
                 document.getElementById('errorMessage').style.display = 'block';

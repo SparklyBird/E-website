@@ -13,6 +13,9 @@
     <h2>Log In</h2>
     <p>Don't have an account? <a th:href="@{/auth/register}" style="color: #007BFF;">Sign Up</a></p>
 
+    <div id="successMessage" class="alert alert-success" role="alert" style="display:none;">
+        Registration successful! Please log in.
+    </div>
 
     <form action="/auth/login" method="post">
         <div class="form-group">
@@ -36,7 +39,19 @@
         Invalid username or password. Please try again.
     </div>
 </div>
+
 <script>
+    // Function to check if query string contains 'success=true'
+    function showSuccessMessage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            document.getElementById('successMessage').style.display = 'block';
+        }
+    }
+
+    // Call the function on page load
+    document.addEventListener('DOMContentLoaded', showSuccessMessage);
+
     const passwordField = document.getElementById("password");
     const togglePassword = document.getElementById("togglePassword");
     const toggleIcon = togglePassword.querySelector("i");

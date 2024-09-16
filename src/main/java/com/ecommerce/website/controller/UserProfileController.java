@@ -38,8 +38,10 @@ public class UserProfileController {
 
 
     @PutMapping("/update")
-    public UserProfileDTO updateUserProfile(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserProfile updatedProfile) {
-        User user = userService.findByUsername(ofNullable(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found")));
+    public UserProfileDTO updateUserProfile(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserProfile updatedProfile)
+    {
+        User user = userService.findByUsername(ofNullable(userDetails.getUsername()).orElseThrow(()
+                -> new RuntimeException("User not found")));
         UserProfile profile = user.getProfile();
 
         profile.setFirstName(updatedProfile.getFirstName());

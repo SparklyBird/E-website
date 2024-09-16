@@ -69,7 +69,7 @@
             <div class="card h-100">
 
                 <img class="card-img-top"
-                     th:src="${#strings.startsWith(product.imageUrl, 'http') ? product.imageUrl : '/' + product.imageUrl}"
+                     th:src="${product.imageUrl}"
                      alt="Product image">
 
 

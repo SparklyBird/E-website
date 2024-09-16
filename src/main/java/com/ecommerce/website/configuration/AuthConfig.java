@@ -54,6 +54,7 @@ public class AuthConfig {
                         .permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"))
                 .build();
     }
 

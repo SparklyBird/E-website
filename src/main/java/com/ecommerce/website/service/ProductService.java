@@ -32,8 +32,13 @@ public class ProductService {
 
     public List<Product> getRandomProducts() {
         List<Product> allProducts = productRepository.findAll();
-        Collections.shuffle(allProducts); // Shuffle to randomize
-        return allProducts.stream().limit(8).collect(Collectors.toList()); // Return only 8
+        Collections.shuffle(allProducts);
+        return allProducts.stream().limit(8).collect(Collectors.toList());
     }
+
+    public Page<Product> searchProducts(String query, Pageable pageable) {
+        return productRepository.searchByNameOrDescription(query, pageable);
+    }
+
 }
 

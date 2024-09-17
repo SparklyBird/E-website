@@ -63,9 +63,8 @@
             <div class="d-flex ms-auto">
                 <a href="/shoppingCart" class="btn btn-outline-primary position-relative me-3">
                     <i class="bi bi-cart"></i> <!-- Bootstrap Icons Cart Icon -->
-                    <!-- Number of Items in the Cart -->
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        <span th:text="${cartItemCount}">0</span> <!-- Thymeleaf to dynamically inject count -->
+                        <span th:text="${cartItemCount}">0</span>
                         <span class="visually-hidden">items in cart</span>
                     </span>
                 </a>

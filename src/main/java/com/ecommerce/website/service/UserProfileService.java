@@ -47,7 +47,7 @@ public class UserProfileService {
         return userProfileRepository.save(newProfile);
     }
 
-    // Updates the profile
+
     public UserProfile updateUserProfile(UserProfile updatedProfile) {
         return userProfileRepository.save(updatedProfile);
     }

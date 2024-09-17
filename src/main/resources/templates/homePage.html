@@ -19,8 +19,8 @@
         </a>
     </div>
     <div class="flex-grow-1">
-        <form th:action="@{/}" method="get" class="d-flex">
-            <input type="text" th:name="search" class="form-control me-2" placeholder="Not working yet :(" aria-label="Search" style="max-width: 450px;">
+        <form th:action="@{/products/search}" method="get" class="d-flex">
+            <input type="text" th:name="query" class="form-control me-2" placeholder="What are you looking for?" aria-label="Search" style="max-width: 450px;" required>
             <button type="submit" class="btn btn-outline-success">Search</button>
         </form>
     </div>

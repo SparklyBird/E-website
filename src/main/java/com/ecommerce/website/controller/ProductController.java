@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -31,7 +32,8 @@ public class ProductController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @GetMapping("/category/{id}")
+    @GetMapping
+            ("/category/{id}")
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "24") int size,
@@ -56,6 +58,22 @@ public class ProductController {
         model.addAttribute("cartItemCount", shoppingCartService.count());
         return "product/productList";
     }
+    @GetMapping("/search")
+    public String searchProducts(@RequestParam("query") String query,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "24") int size,
+                                 Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productService.searchProducts(query, pageable);
+
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("query", query);
+
+        return "product/searchResults";
+    }
+
 
     @GetMapping("/{id}")
     public String getProductDetails(@PathVariable Long id, Model model) {

@@ -114,13 +114,13 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
 
 CREATE TABLE IF NOT EXISTS `Cart` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `user_id` BIGINT
+    `user_id` BIGINT DEFAULT NULL
 )ENGINE=InnoDB AUTO_INCREMENT = 1;
 
 CREATE TABLE IF NOT EXISTS `CartItem` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `cart_id` BIGINT,
-    `product_id` BIGINT,
+    `cart_id` BIGINT DEFAULT NULL,
+    `product_id` BIGINT DEFAULT NULL,
     `quantity` INT NOT NULL,
     FOREIGN KEY (`cart_id`) REFERENCES `Cart` (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`product_id`) REFERENCES `Product` (`id`) ON DELETE CASCADE
@@ -128,10 +128,10 @@ CREATE TABLE IF NOT EXISTS `CartItem` (
 
 CREATE TABLE IF NOT EXISTS Review (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `product_id` BIGINT,
-    `user_id` BIGINT,
+    `product_id` BIGINT DEFAULT NULL,
+    `user_id` BIGINT DEFAULT NULL,
     `rating` INT CHECK (rating >= 1 AND rating <= 5),
-    `comment` TEXT,
+    `comment` TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`product_id`) REFERENCES `Product` (`id`) ON DELETE CASCADE
 )ENGINE=InnoDB AUTO_INCREMENT = 1;

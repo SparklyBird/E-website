@@ -10,11 +10,13 @@ public interface ShoppingCartService {
 
     void removeProduct(Product product);
 
+    void decreaseProduct(Product product);
+
     Map<Product, Integer> getProductsInCart();
 
     void checkout();
 
-    BigDecimal getTotal();
+    BigDecimal getTotalPrice();
 
     int count();
 }

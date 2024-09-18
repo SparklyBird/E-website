@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -32,8 +31,7 @@ public class ProductController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @GetMapping
-            ("/category/{id}")
+    @GetMapping("/category/{id}")
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "24") int size,
@@ -57,5 +55,12 @@ public class ProductController {
 
         model.addAttribute("cartItemCount", shoppingCartService.count());
         return "product/productList";
+    }
+
+    @GetMapping("/{id}")
+    public String getProductDetails(@PathVariable Long id, Model model) {
+        Product product = productService.getProductByIdWithAttributes(id);
+        model.addAttribute("product", product);
+        return "product/productDetails";
     }
 }

@@ -3,140 +3,90 @@
 <head>
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container mt-5">
-    <a th:href="@{/}">Homepage</a>
-    <h1 class="mb-4">Admin Dashboard</h1>
-
-    <section class="section mb-5">
-        <h2 class="mb-3">Delete Item</h2>
-        <form th:action="@{/admin/delete}" method="post" class="form">
-            <div class="form-group">
-                <label for="type">Type:</label>
-                <select id="type" name="type" class="form-control" required>
-                    <option value="product">Product</option>
-                    <option value="category">Category</option>
-                    <option value="user">User</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="id">ID:</label>
-                <input type="text" id="id" name="id" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    </section>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a th:href="@{/}" class="btn btn-secondary">Homepage</a>
+        <h1 class="mx-auto">Admin Dashboard</h1>
+        <div style="width: 81px;"></div> <!-- Placeholder to balance the flex container -->
+    </div>
 
     <section class="section mb-5">
         <h2 class="mb-3">Search Items</h2>
-        <form th:action="@{/admin}" method="get" class="form">
+        <form id="searchForm" class="form">
             <div class="form-group">
-                <input type="text" name="search" class="form-control" placeholder="Search..." th:value="${search}">
+                <input type="text" id="searchInput" name="search" class="form-control" placeholder="Search...">
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </section>
 
-    <section class="section mb-5">
+    <section id="productsSection" class="section mb-5">
         <h2 class="mb-3">Products</h2>
         <a class="btn btn-primary mb-3" th:href="@{/admin/addProduct}">Add Product</a>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="product : ${productPage.content}">
-                <td th:text="${product.id}">ID</td>
-                <td th:text="${product.name}">Product Name</td>
-            </tr>
-            </tbody>
-        </table>
-        <nav>
-            <ul class="pagination">
-                <li class="page-item" th:if="${productPage.hasPrevious()}">
-                    <a class="page-link" th:href="@{/admin(page=${productPage.number - 1}, size=${productPage.size}, search=${search})}">Previous</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
-                    <a class="page-link" th:href="@{/admin(page=${i}, size=${productPage.size}, search=${search})}" th:text="${i + 1}">1</a>
-                </li>
-                <li class="page-item" th:if="${productPage.hasNext()}">
-                    <a class="page-link" th:href="@{/admin(page=${productPage.number + 1}, size=${productPage.size}, search=${search})}">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <div id="productTableContainer">
+        </div>
     </section>
 
-    <section class="section mb-5">
+    <section id="categoriesSection" class="section mb-5">
         <h2 class="mb-3">Categories</h2>
         <a class="btn btn-primary mb-3" th:href="@{/admin/addCategory}">Add Category</a>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="category : ${categoryPage.content}">
-                <td th:text="${category.id}">ID</td>
-                <td th:text="${category.name}">Category Name</td>
-            </tr>
-            </tbody>
-        </table>
-        <nav>
-            <ul class="pagination">
-                <li class="page-item" th:if="${productPage.hasPrevious()}">
-                    <a class="page-link" th:href="@{/admin/dashboard(page=${productPage.number - 1}, size=${productPage.size}, search=${search})}">Previous</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
-                    <a class="page-link" th:href="@{/admin/dashboard(page=${i}, size=${productPage.size}, search=${search})}" th:text="${i + 1}">1</a>
-                </li>
-                <li class="page-item" th:if="${productPage.hasNext()}">
-                    <a class="page-link" th:href="@{/admin/dashboard(page=${productPage.number + 1}, size=${productPage.size}, search=${search})}">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <div id="categoryTableContainer">
+        </div>
     </section>
 
-    <section class="section mb-5">
+    <section id="usersSection" class="section mb-5">
         <h2 class="mb-3">Users</h2>
         <a class="btn btn-primary mb-3" th:href="@{/admin/addUser}">Add New User</a>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Login</th>
-                <th>Role</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${userPage.content}">
-                <td th:text="${user.id}">ID</td>
-                <td th:text="${user.username}">Login</td>
-                <td th:text="${user.role}">Role</td>
-            </tr>
-            </tbody>
-        </table>
-        <nav>
-            <ul class="pagination">
-                <li class="page-item" th:if="${userPage.hasPrevious()}">
-                    <a class="page-link" th:href="@{/admin(page=${userPage.number - 1}, size=${userPage.size}, search=${search})}">Previous</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
-                    <a class="page-link" th:href="@{/admin(page=${i}, size=${userPage.size}, search=${search})}" th:text="${i + 1}">1</a>
-                </li>
-                <li class="page-item" th:if="${userPage.hasNext()}">
-                    <a class="page-link" th:href="@{/admin(page=${userPage.number + 1}, size=${userPage.size}, search=${search})}">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <div id="userTableContainer">
+        </div>
     </section>
 </div>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        var contextPath = '/';
+
+        function loadTable(type, page, search) {
+            var url = contextPath + 'admin/' + type + 'Table?page=' + page;
+            if (search) {
+                url += '&search=' + encodeURIComponent(search);
+            }
+            $.get(url, function(data) {
+                $('#' + type + 'TableContainer').html(data);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error("Error loading " + type + " table:", textStatus, errorThrown);
+                $('#' + type + 'TableContainer').html('<p class="text-danger">Error loading ' + type + ' table. Please try again.</p>');
+            });
+        }
+
+        function loadAllTables(page, search) {
+            loadTable('product', page, search);
+            loadTable('category', page, search);
+            loadTable('user', page, search);
+        }
+
+        loadAllTables(0, '');
+
+        $('#searchForm').submit(function(e) {
+            e.preventDefault();
+            var search = $('#searchInput').val();
+            loadAllTables(0, search);
+        });
+
+        // Pagination click handler
+        $(document).on('click', '.pagination .page-link', function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            var type = $this.data('type');
+            var page = $this.data('page');
+            var search = $('#searchInput').val();
+            loadTable(type, page, search);
+        });
+    });
+</script>
 </body>
 </html>

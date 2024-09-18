@@ -6,6 +6,7 @@
 </head>
 <body>
 <div class="container mt-5">
+    <a href="/admin" class="btn btn-secondary mb-4"><i class="fa fa-arrow-left"></i> Back</a>
     <h1 class="mb-4 text-center font-bold">Add Product</h1>
     <form th:action="@{/admin/addProduct}" th:object="${product}" method="post" enctype="multipart/form-data">
         <div class="row mb-3">
@@ -30,7 +31,6 @@
                                 th:text="${category.name}"></option>
                     </select>
                 </div>
-                <!-- New field for image upload -->
                 <div class="form-group">
                     <label for="image" class="font-bold">Product Image:</label>
                     <div class="custom-file">

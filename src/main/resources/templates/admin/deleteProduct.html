@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Delete Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Delete Product</h1>
+    <p>Are you sure you want to delete the product "<span th:text="${product.name}"></span>"?</p>
+
+    <form th:action="@{/admin/deleteProduct}" method="post">
+        <input type="hidden" th:value="${product.id}" name="id" />
+        <a class="btn btn-secondary" th:href="@{/admin}">Cancel</a>
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+</body>
+</html>

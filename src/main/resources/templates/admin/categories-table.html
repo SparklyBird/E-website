@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="categoryTable">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categoryPage.content}">
+      <td th:text="${category.id}">ID</td>
+      <td th:text="${category.name}">Category Name</td>
+      <td>
+        <a class="btn btn-info btn-sm" th:href="@{/admin/updateCategory(id=${category.id})}">Update</a>
+        <a class="btn btn-danger btn-sm" th:href="@{/admin/deleteCategory(id=${category.id})}">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <nav th:if="${categoryPage.totalPages > 0}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${categoryPage.number == 0} ? 'disabled'">
+        <a class="page-link" href="#" data-type="category" data-page="0">First</a>
+      </li>
+      <li class="page-item" th:classappend="${!categoryPage.hasPrevious()} ? 'disabled'">
+        <a class="page-link" href="#" data-type="category" th:data-page="${categoryPage.number - 1}">Previous</a>
+      </li>
+      <li class="page-item"
+          th:each="pageNumber : ${#numbers.sequence(
+                    categoryPage.number > 2 ? categoryPage.number - 2 : 1,
+                    categoryPage.number + 3 > categoryPage.totalPages ? categoryPage.totalPages : categoryPage.number + 3
+                )}"
+          th:classappend="${pageNumber == categoryPage.number + 1} ? 'active'">
+        <a class="page-link" href="#" data-type="category" th:data-page="${pageNumber - 1}" th:text="${pageNumber}"></a>
+      </li>
+      <li class="page-item" th:classappend="${!categoryPage.hasNext()} ? 'disabled'">
+        <a class="page-link" href="#" data-type="category" th:data-page="${categoryPage.number + 1}">Next</a>
+      </li>
+      <li class="page-item" th:classappend="${categoryPage.number == categoryPage.totalPages - 1} ? 'disabled'">
+        <a class="page-link" href="#" data-type="category" th:data-page="${categoryPage.totalPages - 1}">Last</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+</body>
+</html>

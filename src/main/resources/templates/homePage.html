@@ -26,41 +26,20 @@
     </div>
 </div>
 
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}">Homepage</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/products/category/1}">Books</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/products/category/2}">Coffee Mugs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/products/category/3}">Mouse Pads</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/products/category/4}">Luggage Tags</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/products/category/5}">Apparel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/products/category/6}">Footwear</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                        <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="d-flex ms-auto">
-                <a href="/shoppingCart" class="btn btn-outline-primary position-relative me-3">
-                    <i class="bi bi-cart"></i> <!-- Bootstrap Icons Cart Icon -->
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Homepage</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav" id="categoryList">
+            </ul>
+        </div>
+        <div class="d-flex ms-auto">
+            <a href="/shoppingCart" class="btn btn-outline-primary position-relative me-3">
+                <i class="bi bi-cart"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         <span th:text="${cartItemCount}">0</span>
                         <span class="visually-hidden">items in cart</span>
                     </span>
@@ -86,10 +65,8 @@
                 <div class="card h-100">
                     <img class="card-img-top" th:src="${product.imageUrl}" alt="Product image">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Product Name</a>
-                        </h5>
-                        <p class="card-text" th:text="${'$' + #numbers.formatDecimal(product.unitPrice, 1, 2)}">Price</p>
+                        <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                        <p class="card-text" th:text="${product.unitPrice}">Price</p>
                         <a th:href="@{'/shoppingCart/addProduct/{id}?redirectUrl=' + ${currentUrl}(id=${product.id})}"  class="col-md-1"
                            th:if="${product.unitsInStock}>0">
                             <button type="button" class="btn btn-primary">Add to Cart</button>
@@ -100,6 +77,27 @@
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("/products/categories")
+            .then(response => response.json())
+            .then(categories => {
+                const categoryList = document.getElementById("categoryList");
+                categories.forEach(category => {
+                    const li = document.createElement("li");
+                    li.classList.add("nav-item");
+                    li.innerHTML = `<a class="nav-link" href="/products/category/${category.id}">${category.name}</a>`;
+                    categoryList.appendChild(li);
+                });
+                const li = document.createElement("li");
+                li.classList.add("nav-item");
+                li.innerHTML = `<a class="nav-link" href="/admin">Admin Panel</a>`;
+                categoryList.appendChild(li);
+            })
+            .catch(error => console.error("Error fetching categories:", error));
+    });
+</script>
 </body>
+
 </html>

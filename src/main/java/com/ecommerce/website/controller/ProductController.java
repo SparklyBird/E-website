@@ -1,5 +1,6 @@
 package com.ecommerce.website.controller;
 
+import com.ecommerce.website.dto.CategoryDTO;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.service.CategoryService;
 import com.ecommerce.website.service.ProductService;
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/products")
@@ -62,5 +67,12 @@ public class ProductController {
         Product product = productService.getProductByIdWithAttributes(id);
         model.addAttribute("product", product);
         return "product/productDetails";
+    }
+
+    @GetMapping("/categories")
+    @ResponseBody
+    public List<CategoryDTO> getAllCategories() {
+        return categoryService.getAllCategories().stream()
+                .map(category -> new CategoryDTO(category.getId(), category.getName())).toList();
     }
 }

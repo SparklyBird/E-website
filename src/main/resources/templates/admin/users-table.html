@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="userTable">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Login</th>
+      <th>Role</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${userPage.content}">
+      <td th:text="${user.id}">ID</td>
+      <td th:text="${user.username}">Login</td>
+      <td th:text="${user.role}">Role</td>
+      <td>
+        <a class="btn btn-info btn-sm" th:href="@{/admin/updateUser(id=${user.id})}">Update</a>
+        <a class="btn btn-danger btn-sm" th:href="@{/admin/deleteUser(id=${user.id})}">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <nav th:if="${userPage.totalPages > 0}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${userPage.number == 0} ? 'disabled'">
+        <a class="page-link" href="#" data-type="user" data-page="0">First</a>
+      </li>
+      <li class="page-item" th:classappend="${!userPage.hasPrevious()} ? 'disabled'">
+        <a class="page-link" href="#" data-type="user" th:data-page="${userPage.number - 1}">Previous</a>
+      </li>
+      <li class="page-item"
+          th:each="pageNumber : ${#numbers.sequence(
+                    userPage.number > 2 ? userPage.number - 2 : 1,
+                    userPage.number + 3 > userPage.totalPages ? userPage.totalPages : userPage.number + 3
+                )}"
+          th:classappend="${pageNumber == userPage.number + 1} ? 'active'">
+        <a class="page-link" href="#" data-type="user" th:data-page="${pageNumber - 1}" th:text="${pageNumber}"></a>
+      </li>
+      <li class="page-item" th:classappend="${!userPage.hasNext()} ? 'disabled'">
+        <a class="page-link" href="#" data-type="user" th:data-page="${userPage.number + 1}">Next</a>
+      </li>
+      <li class="page-item" th:classappend="${userPage.number == userPage.totalPages - 1} ? 'disabled'">
+        <a class="page-link" href="#" data-type="user" th:data-page="${userPage.totalPages - 1}">Last</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+</body>
+</html>

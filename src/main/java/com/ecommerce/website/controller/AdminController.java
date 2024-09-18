@@ -7,20 +7,22 @@ import com.ecommerce.website.service.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -28,13 +30,21 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     private final AdminService adminService;
 
+    @Value("${upload.path}")
+    private String uploadPath;
+
     @Autowired
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
     }
 
     @GetMapping
-    public String adminDashboard(
+    public String adminDashboard() {
+        return "admin/dashboard";
+    }
+
+    @GetMapping("/productTable")
+    public String getProductTable(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -44,19 +54,47 @@ public class AdminController {
         Page<Product> productPage = (search != null && !search.isEmpty()) ?
                 adminService.findProductByNameContaining(search, pageable) :
                 adminService.findProductAll(pageable);
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("search", search);
+
+        return "admin/products-table :: productTable";
+    }
+
+    @GetMapping("/categoryTable")
+    public String getCategoryTable(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
         Page<Category> categoryPage = (search != null && !search.isEmpty()) ?
                 adminService.findCategoriesByNameContaining(search, pageable) :
                 adminService.findCategoriesAll(pageable);
+
+        model.addAttribute("categoryPage", categoryPage);
+        model.addAttribute("search", search);
+
+        return "admin/categories-table :: categoryTable";
+    }
+
+    @GetMapping("/userTable")
+    public String getUserTable(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
         Page<User> userPage = (search != null && !search.isEmpty()) ?
                 adminService.findUserByLoginContaining(search, pageable) :
                 adminService.findUserAll(pageable);
 
-        model.addAttribute("productPage", productPage);
-        model.addAttribute("categoryPage", categoryPage);
         model.addAttribute("userPage", userPage);
         model.addAttribute("search", search);
 
-        return "admin/dashboard";
+        return "admin/users-table :: userTable";
     }
 
     @PostMapping("/delete")
@@ -82,7 +120,6 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-
     @GetMapping("/addProduct")
     public String addProductForm(Model model) {
         model.addAttribute("categories", adminService.findALLCategories());
@@ -91,23 +128,42 @@ public class AdminController {
     }
 
     @PostMapping("/addProduct")
-    public String addProductSubmit(@ModelAttribute Product product, @RequestParam("image") MultipartFile file) {
+    public String addProductSubmit(@ModelAttribute Product product, @RequestParam("image") MultipartFile file, RedirectAttributes redirectAttributes) {
         try {
             if (!file.isEmpty()) {
-                // Handle file upload
-                String fileName = file.getOriginalFilename();
-                String filePath = "static/images/" + fileName;
-                File targetFile = new File(filePath);
-                file.transferTo(targetFile);
-                product.setImageUrl(filePath);
+                Path uploadDir = Paths.get(uploadPath);
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
+                }
+
+                String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path filePath = uploadDir.resolve(fileName);
+                Files.copy(file.getInputStream(), filePath);
+
+                product.setImageUrl("/images/" + fileName);
             }
+
             adminService.saveProduct(product);
+            redirectAttributes.addFlashAttribute("message", "Product added successfully");
             return "redirect:/admin";
+
+        } catch (CannotAcquireLockException e) {
+            logger.error("Database lock error", e);
+            redirectAttributes.addFlashAttribute("error", "Unable to add product. Please try again.");
+            return "redirect:/admin/addProduct";
+
         } catch (IOException e) {
             logger.error("Error uploading product image", e);
-            return "error";
+            redirectAttributes.addFlashAttribute("error", "Error uploading image. Please try again.");
+            return "redirect:/admin/addProduct";
+
+        } catch (Exception e) {
+            logger.error("Error adding product", e);
+            redirectAttributes.addFlashAttribute("error", "An unexpected error occurred. Please try again.");
+            return "redirect:/admin/addProduct";
         }
     }
+
 
     @GetMapping("/updateProduct")
     public String showUpdateProductForm(@RequestParam Long id, Model model) {
@@ -120,14 +176,27 @@ public class AdminController {
     @PostMapping("/updateProduct")
     public String updateProductSubmit(@ModelAttribute Product product, @RequestParam("image") MultipartFile file) {
         try {
+            Product existingProduct = adminService.findProductById(product.getId());
+
             if (!file.isEmpty()) {
-                // Handle file upload
-                String fileName = file.getOriginalFilename();
-                String filePath = "static/images/" + fileName;
-                File targetFile = new File(filePath);
-                file.transferTo(targetFile);
-                product.setImageUrl(filePath);
+                Path uploadDir = Paths.get(uploadPath);
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
+                }
+
+                String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path filePath = uploadDir.resolve(fileName);
+                Files.copy(file.getInputStream(), filePath);
+
+                product.setImageUrl("/images/" + fileName);
+            } else {
+                // If no new file is uploaded, keep the existing image URL
+                product.setImageUrl(existingProduct.getImageUrl());
             }
+            product.setActive(existingProduct.isActive());
+            product.setSku(existingProduct.getSku());
+            product.setUnitsInStock(existingProduct.getUnitsInStock());
+
             adminService.saveProduct(product);
             return "redirect:/admin";
         } catch (IOException e) {
@@ -135,7 +204,6 @@ public class AdminController {
             return "error";
         }
     }
-
 
     @GetMapping("/addCategory")
     public String addCategoryForm(Model model) {

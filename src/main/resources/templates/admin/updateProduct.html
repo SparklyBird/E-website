@@ -1,31 +1,87 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Update Product</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-5">
-  <h1 class="mb-4">Update Product</h1>
-
-  <form th:action="@{/admin/updateProduct}" method="post">
-    <input type="hidden" th:value="${product.id}" name="id" />
-    <div class="form-group">
-      <label for="name">Product Name:</label>
-      <input type="text" id="name" name="name" th:value="${product.name}" class="form-control" required>
+  <a href="/admin" class="btn btn-secondary mb-4"><i class="fa fa-arrow-left"></i> Back</a>
+  <h1 class="mb-4 text-center font-bold">Update Product</h1>
+  <form th:action="@{/admin/updateProduct}" th:object="${product}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{active}">
+    <input type="hidden" th:field="*{sku}">
+    <input type="hidden" th:field="*{unitsInStock}">
+    <div class="row mb-3">
+      <div class="col-md-6 offset-md-3">
+        <div class="form-group">
+          <label for="name" class="font-bold">Name:</label>
+          <input type="text" id="name" th:field="*{name}" class="form-control short-input" required>
+        </div>
+        <div class="form-group">
+          <label for="description" class="font-bold">Description:</label>
+          <textarea id="description" th:field="*{description}" class="form-control short-input" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="price" class="font-bold">Price:</label>
+          <input type="number" id="price" step="0.01" th:field="*{unitPrice}" class="form-control short-input" required>
+        </div>
+        <div class="form-group">
+          <label for="category" class="font-bold">Category:</label>
+          <select id="category" th:field="*{category.id}" class="form-control short-input" required>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"
+                    th:selected="${category.id == product.category.id}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="image" class="font-bold">Product Image:</label>
+          <div class="custom-file">
+            <input type="file" id="image" name="image" class="custom-file-input">
+            <label class="custom-file-label" for="image">Choose file</label>
+          </div>
+          <small class="form-text text-muted">Leave empty to keep the current image.</small>
+        </div>
+        <div class="form-group">
+          <label class="font-bold">Current Image:</label>
+          <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" alt="Current Product Image" class="img-thumbnail" style="max-width: 200px;">
+          <p th:unless="${product.imageUrl}">No image currently set</p>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Update Product</button>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="price">Price:</label>
-      <input type="text" id="price" name="price" th:value="${product.price}" class="form-control" required>
-    </div>
-    <div class="form-group">
-      <label for="description">Description:</label>
-      <textarea id="description" name="description" class="form-control" required th:text="${product.description}"></textarea>
-    </div>
-
-    <a class="btn btn-secondary" th:href="@{/admin}">Cancel</a>
-    <button type="submit" class="btn btn-primary">Save</button>
   </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  // Update the file input label when a file is selected
+  document.querySelector('.custom-file-input').addEventListener('change', function (event) {
+    const fileName = event.target.files[0] ? event.target.files[0].name : 'Choose file';
+    const nextSibling = event.target.nextElementSibling;
+    nextSibling.innerText = fileName;
+  });
+</script>
 </body>
+<style>
+  .font-bold {
+    font-weight: bold;
+  }
+  .short-input {
+    max-width: 100%;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  .form-group label {
+    margin-bottom: 0.5rem;
+  }
+  .custom-file-label::after {
+    content: "Browse";
+  }
+</style>
 </html>

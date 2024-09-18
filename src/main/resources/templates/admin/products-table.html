@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="productTable">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${productPage.content}">
+      <td th:text="${product.id}">ID</td>
+      <td th:text="${product.name}">Product Name</td>
+      <td>
+        <a class="btn btn-info btn-sm" th:href="@{/admin/updateProduct(id=${product.id})}">Update</a>
+        <a class="btn btn-danger btn-sm" th:href="@{/admin/deleteProduct(id=${product.id})}">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <nav th:if="${productPage.totalPages > 0}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${productPage.number == 0} ? 'disabled'">
+        <a class="page-link" href="#" data-type="product" data-page="0">First</a>
+      </li>
+      <li class="page-item" th:classappend="${!productPage.hasPrevious()} ? 'disabled'">
+        <a class="page-link" href="#" data-type="product" th:data-page="${productPage.number - 1}">Previous</a>
+      </li>
+      <li class="page-item"
+          th:each="pageNumber : ${#numbers.sequence(
+                    productPage.number > 2 ? productPage.number - 2 : 1,
+                    productPage.number + 3 > productPage.totalPages ? productPage.totalPages : productPage.number + 3
+                )}"
+          th:classappend="${pageNumber == productPage.number + 1} ? 'active'">
+        <a class="page-link" href="#" data-type="product" th:data-page="${pageNumber - 1}" th:text="${pageNumber}"></a>
+      </li>
+      <li class="page-item" th:classappend="${!productPage.hasNext()} ? 'disabled'">
+        <a class="page-link" href="#" data-type="product" th:data-page="${productPage.number + 1}">Next</a>
+      </li>
+      <li class="page-item" th:classappend="${productPage.number == productPage.totalPages - 1} ? 'disabled'">
+        <a class="page-link" href="#" data-type="product" th:data-page="${productPage.totalPages - 1}">Last</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+</body>
+</html>

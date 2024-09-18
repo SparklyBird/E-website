@@ -13,6 +13,9 @@ public class UserProfileDTO {
     private String email;
     private String phoneNumber;
 
+    public UserProfileDTO() {
+    }
+
     public UserProfileDTO(UserProfile userProfile) {
         this.id = userProfile.getId();
         this.firstName = userProfile.getFirstName();

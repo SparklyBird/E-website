@@ -3,6 +3,8 @@ package com.ecommerce.website.controller;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.service.CategoryService;
 import com.ecommerce.website.service.ProductService;
+import com.ecommerce.website.service.ShoppingCartService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,18 +22,26 @@ public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final ShoppingCartService shoppingCartService;
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService) {
+    public ProductController(ProductService productService, CategoryService categoryService, ShoppingCartService shoppingCartService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.shoppingCartService = shoppingCartService;
     }
 
     @GetMapping("/category/{id}")
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "24") int size,
-                                        Model model) {
+                                        HttpServletRequest request, Model model) {
+        String currentUrl = request.getRequestURI();
+        if (request.getQueryString() != null) {
+            currentUrl += "?" + request.getQueryString();
+        }
+        model.addAttribute("currentUrl", currentUrl);
+
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productService.getProductsByCategory(id, pageable);
 
@@ -43,6 +53,7 @@ public class ProductController {
         String categoryName = categoryService.getCategoryNameById(id);
         model.addAttribute("categoryName", categoryName);
 
+        model.addAttribute("cartItemCount", shoppingCartService.count());
         return "product/productList";
     }
 

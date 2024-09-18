@@ -27,31 +27,23 @@ public class UserProfileController {
         this.userService = userService;
     }
 
-    // Get profile of the user
-    @GetMapping("/get")
-    public UserProfileDTO getProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.findByUsername(ofNullable(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found")));
-        return new UserProfileDTO(user.getProfile());
-    }
-
-
-    // Update the profile of the user
-    @PutMapping("/update")
-    public UserProfileDTO updateUserProfile(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserProfile updatedProfile) {
-        User user = userService.findByUsername(ofNullable(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found")));
-        UserProfile profile = user.getProfile();
+    @PostMapping("/update")
+    public UserProfileDTO updateUserProfile(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserProfileDTO updatedProfile) {
+        User user = userService.findByUsername(ofNullable(userDetails.getUsername()).orElseThrow(()
+                -> new RuntimeException("User not found")));
+        UserProfile profile = ofNullable(user.getProfile()).orElse(new UserProfile());
 
         profile.setFirstName(updatedProfile.getFirstName());
         profile.setLastName(updatedProfile.getLastName());
         profile.setEmail(updatedProfile.getEmail());
         profile.setPhoneNumber(updatedProfile.getPhoneNumber());
+        profile.setUser(user);
 
         UserProfile profileAfterUpdate = userProfileService.updateUserProfile(profile);
         return new UserProfileDTO(profileAfterUpdate);
     }
 
-    //Endpoint to create a new profile
+
     @PostMapping("/create")
     public UserProfileDTO createUserProfile(@RequestBody UserProfile profile, @RequestParam Long userId) {
         User user = userService.findById(userId);

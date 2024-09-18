@@ -2,6 +2,7 @@ package com.ecommerce.website.service;
 
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.dao.base.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,11 @@ public class ProductService {
         List<Product> allProducts = productRepository.findAll();
         Collections.shuffle(allProducts); // Shuffle to randomize
         return allProducts.stream().limit(8).collect(Collectors.toList()); // Return only 8
+    }
+
+    public Product findById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
     }
 }
 

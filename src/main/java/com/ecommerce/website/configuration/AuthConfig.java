@@ -34,10 +34,11 @@ public class AuthConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll()
-                        .requestMatchers("/images/**").permitAll()  // Allow access to static images
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*").permitAll()
+                        .requestMatchers("/shoppingCart/**").permitAll()
                         .requestMatchers("/admin/**").hasRole(ADMIN)
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
@@ -53,6 +54,7 @@ public class AuthConfig {
                         .permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"))
                 .build();
     }
 
@@ -64,6 +66,6 @@ public class AuthConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 }

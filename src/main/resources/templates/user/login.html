@@ -11,7 +11,11 @@
 <div class="container">
     <a th:href="@{/}">Back to homepage</a>
     <h2>Log In</h2>
-    <p>Don't have an account? <a href="/register" style="color: #007BFF;">Sign Up</a></p>
+    <p>Don't have an account? <a th:href="@{/auth/register}" style="color: #007BFF;">Sign Up</a></p>
+
+    <div id="successMessage" class="alert alert-success" role="alert" style="display:none;">
+        Registration successful! Please log in.
+    </div>
 
     <form action="/auth/login" method="post">
         <div class="form-group">
@@ -30,12 +34,24 @@
         <button type="submit" class="button">Log In</button>
     </form>
 
-    <!-- Display errors if login fails -->
+
     <div th:if="${param.error}" class="alert alert-danger" role="alert">
         Invalid username or password. Please try again.
     </div>
 </div>
+
 <script>
+
+    function showSuccessMessage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            document.getElementById('successMessage').style.display = 'block';
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', showSuccessMessage);
+
     const passwordField = document.getElementById("password");
     const togglePassword = document.getElementById("togglePassword");
     const toggleIcon = togglePassword.querySelector("i");
@@ -47,6 +63,7 @@
         toggleIcon.classList.toggle("fa-eye-slash");
     });
 </script>
+
 <style>
     body {
         font-family: 'Arial', sans-serif;

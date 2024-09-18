@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.stream.Collectors;
-
-
 import java.util.List;
 
 @Service
@@ -26,6 +24,15 @@ public class ProductService {
         return productRepository.findByCategoryId(categoryId, pageable);
     }
 
+    public Product getProductById(Long id){
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public Product getProductByIdWithAttributes(Long id) {
+        return productRepository.findByIdWithAttributes(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
     public List<Product> findAll() {
         return productRepository.findAll();
     }
@@ -36,4 +43,5 @@ public class ProductService {
         return allProducts.stream().limit(8).collect(Collectors.toList()); // Return only 8
     }
 }
+
 

@@ -68,13 +68,13 @@
         <div class="col" th:each="product : ${products}">
             <div class="card h-100">
 
-                <img class="card-img-top"
-                     th:src="${#strings.startsWith(product.imageUrl, 'http') ? product.imageUrl : '/' + product.imageUrl}"
-                     alt="Product image">
+                <img class="card-img-top" th:src="${product.imageUrl}" alt="Product image">
 
 
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                    <h5 class="card-title">
+                        <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Product Name</a>
+                    </h5>
                     <p class="card-text" th:text="${product.unitPrice}">Price</p>
                 </div>
             </div>

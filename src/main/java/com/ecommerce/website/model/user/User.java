@@ -81,6 +81,10 @@ public class User implements UserDetails {
                 '}';
     }
 
+    public String getLogin() {
+        return login;
+    }
+
     @Override
     public String getUsername() {
         return login;

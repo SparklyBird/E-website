@@ -17,7 +17,8 @@
         <div class="form-group">
             <label for="role">Role:</label>
             <select id="role" name="role" class="form-control" required>
-                <option th:each="role : ${#arrays.asList('USER', 'ADMIN')}" th:value="${role}" th:text="${role}" th:selected="${role == user.role}"></option>
+                <option value="USER" th:selected="${'USER' == user.role}">USER</option>
+                <option value="ADMIN" th:selected="${'ADMIN' == user.role}">ADMIN</option>
             </select>
         </div>
 

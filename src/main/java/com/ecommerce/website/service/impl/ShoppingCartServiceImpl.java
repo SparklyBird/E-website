@@ -62,7 +62,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 if (cart.getCartItem().isEmpty()) {
                     addingProductsToCart(cart);
                 } else {
-                    addingProductsToExistingCart(cart,true);
+                    addingProductsToExistingCart(cart, true);
                 }
             }
             if (!cart.getCartItem().isEmpty()) {
@@ -109,7 +109,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void checkout(User user) {
         this.products.clear();
-        if (user != null){
+        if (user != null) {
             Cart cart = getOrCreateCart(user);
             cartRepository.delete(cart);
         }
@@ -163,7 +163,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         products.forEach((product, quantity) -> {
             CartItem cartItem = existingCartItems.get(product);
             if (cartItem != null) {
-                if (init == true)
+                if (init)
                     cartItem.setQuantity(quantity + cartItem.getQuantity());
                 else
                     cartItem.setQuantity(quantity);
@@ -191,7 +191,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (cart.getCartItem().isEmpty()) {
             addingProductsToCart(cart);
         } else {
-            addingProductsToExistingCart(cart,false);
+            addingProductsToExistingCart(cart, false);
         }
     }
 

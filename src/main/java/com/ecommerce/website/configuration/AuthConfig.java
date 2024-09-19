@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthConfig {
 
     private String ADMIN = "ADMIN";
+    private String USER = "USER";
 
     SecurityFilter securityFilter;
 
@@ -40,6 +41,7 @@ public class AuthConfig {
                         .requestMatchers("/auth/login", "/auth/register", "/api/auth/*", "/api/profile/*", "/api/payment/secure/*").permitAll()
                         .requestMatchers("/shoppingCart/**").permitAll()
                         .requestMatchers("/checkout/**").permitAll()
+                        .requestMatchers("/order/**").hasAnyRole(ADMIN, USER)
                         .requestMatchers("/admin/**").hasRole(ADMIN)
                         .anyRequest().authenticated())
                 .formLogin((form) -> form

@@ -64,10 +64,9 @@ public class CheckoutController {
         List<OrderItem> orderItems = new ArrayList<>();
         cart.forEach((product, quantity) -> {
             OrderItem orderItem = new OrderItem(
-                    product.getImageUrl(),
                     product.getUnitPrice(),
                     quantity,
-                    product.getId()
+                    product
             );
             orderItems.add(orderItem); // Add OrderItem to Order
         });

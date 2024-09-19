@@ -11,10 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+
 
 
 @Controller
@@ -58,6 +59,19 @@ public class ProductController {
         model.addAttribute("cartItemCount", shoppingCartService.count());
         return "product/productList";
     }
+
+//    @GetMapping("/suggest")
+//    public ResponseEntity<List<String>> getSuggestions(@RequestParam("query") String query) {
+//        List<String> suggestions = productService.getSuggestions(query);
+//        return ResponseEntity.ok(suggestions);
+//    }
+
+    @GetMapping("/products/suggestions")
+    @ResponseBody
+    public List<String> getSuggestions(@RequestParam("query") String query) {
+        return productService.getSuggestions(query);
+    }
+
     @GetMapping("/search")
     public String searchProducts(@RequestParam("query") String query,
                                  @RequestParam(defaultValue = "0") int page,

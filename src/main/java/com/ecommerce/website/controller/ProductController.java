@@ -88,7 +88,6 @@ public class ProductController {
         return "product/searchResults";
     }
 
-
     @GetMapping("/{id}")
     public String getProductDetails(@PathVariable Long id, Model model) {
         Product product = productService.getProductByIdWithAttributes(id);

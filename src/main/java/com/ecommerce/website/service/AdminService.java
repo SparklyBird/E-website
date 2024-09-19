@@ -29,6 +29,18 @@ public class AdminService {
         this.userRepository = userRepository;
     }
 
+    public Product findProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public Category findCategoryById(Long id) {
+        return categoryRepository.findById(id).orElse(null);
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public void deleteCategory(Long id) {
         try {
             categoryRepository.deleteById(id);

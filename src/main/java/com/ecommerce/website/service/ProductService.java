@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.stream.Collectors;
-
-
 import java.util.List;
 
 @Service
@@ -25,6 +23,15 @@ public class ProductService {
 
     public Page<Product> getProductsByCategory(Long categoryId, Pageable pageable) {
         return productRepository.findByCategoryId(categoryId, pageable);
+    }
+
+    public Product getProductById(Long id){
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public Product getProductByIdWithAttributes(Long id) {
+        return productRepository.findByIdWithAttributes(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     public List<Product> findAll() {
@@ -42,4 +49,5 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
     }
 }
+
 

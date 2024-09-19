@@ -86,7 +86,9 @@
 
 
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                    <h5 class="card-title">
+                        <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Product Name</a>
+                    </h5>
                     <p class="card-text" th:text="${product.unitPrice}">Price</p>
                     <a th:href="@{'/shoppingCart/addProduct/{id}?redirectUrl=' + ${currentUrl}(id=${product.id})}"  class="col-md-1"
                        th:if="${product.unitsInStock}>0">

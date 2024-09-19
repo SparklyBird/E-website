@@ -6,36 +6,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.0/font/bootstrap-icons.min.css" rel="stylesheet">
     <title th:text="${product.name}">Product Details</title>
 </head>
 
 <body>
 <div class="container-fluid">
     <!-- Header -->
-    <div class="row bg-dark text-white py-3">
-        <div class="col-md-6">
-            <h1 class="h3">Your E-commerce Store</h1>
+    <div class="d-flex align-items-center w-100">
+        <div class="me-3">
+            <a th:href="@{/}">
+                <img th:src="@{/images/logo.png}" alt="Logo" style="max-width: 70px; max-height: 70px;">
+            </a>
         </div>
-        <div class="col-md-6 text-end">
-            <a href="#" class="btn btn-outline-light me-2">Cart</a>
-            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-primary">Login</a>
-            <form sec:authorize="isAuthenticated()" th:action="@{/auth/logout}" method="POST" class="d-inline">
-                <button type="submit" class="btn btn-primary">Logout</button>
+        <div class="flex-grow-1">
+            <form th:action="@{/}" method="get" class="d-flex">
+                <input type="text" th:name="search" class="form-control me-2" placeholder="Not working yet :(" aria-label="Search" style="max-width: 450px;">
+                <button type="submit" class="btn btn-outline-success">Search</button>
             </form>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" th:href="@{/}">Homepage</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/}">Home</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/products/category/1}">Books</a>
                     </li>
@@ -48,7 +47,39 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/products/category/4}">Luggage Tags</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/products/category/5}">Apparel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/products/category/6}">Footwear</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN') or hasRole('USER')">
+                        <a class="nav-link" th:href="@{/order}">Order</a>
+                    </li>
                 </ul>
+            </div>
+            <div class="d-flex ms-auto">
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="btn btn-outline-danger me-3">
+                    Admin Panel
+                </a>
+                <a href="/shoppingCart" class="btn btn-outline-primary position-relative me-3">
+                    <i class="bi bi-cart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <span id="cartItemCount" th:text="${cartItemCount}">0</span>
+                        <span class="visually-hidden">items in cart</span>
+                    </span>
+                </a>
+            </div>
+            <div class="d-flex ms-auto">
+                <a sec:authorize="isAuthenticated()" th:href="@{/profile/view}" class="btn btn-outline-primary mt-2 me-3">
+                    User Profile
+                </a>
+                <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-primary mt-2">
+                    Login
+                </a>
+                <form sec:authorize="isAuthenticated()" action="#" th:action="@{/auth/logout}" method="POST">
+                    <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
+                </form>
             </div>
         </div>
     </nav>
@@ -65,7 +96,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                <img th:src="${#strings.startsWith(product.imageUrl, 'http') ? product.imageUrl : '/' + product.imageUrl}"
+                <img th:src="${product.imageUrl}"
                      th:alt="${product.name}" class="img-fluid rounded shadow">
             </div>
             <div class="col-md-6">
@@ -84,7 +115,13 @@
                         <label for="quantity" class="form-label">Quantity:</label>
                         <input type="number" id="quantity" name="quantity" value="1" min="1" th:max="${product.unitsInStock}" class="form-control" style="width: 100px;">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            th:attr="data-product-id=${product.id}"
+                            onclick="addToCart(this)"
+                            th:if="${product.unitsInStock > 0}">
+                        Add to Cart
+                    </button>
                 </form>
             </div>
         </div>
@@ -115,5 +152,28 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+    function addToCart(button) {
+        const productId = button.getAttribute('data-product-id').trim();
+        const url = `/shoppingCart/addProductToCart/${productId}`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update cart count
+            document.getElementById('cartItemCount').textContent = data.cartItemCount;
+            // You can add more UI updates here, like showing a success message
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle errors, maybe show an error message to the user
+        });
+    }
+</script>
 </body>
 </html>

@@ -49,21 +49,27 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/products/category/6}">Footwear</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN') or hasRole('USER')">
+                    <a class="nav-link" th:href="@{/order}">Order</a>
                 </li>
             </ul>
         </div>
         <div class="d-flex ms-auto">
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="btn btn-outline-danger me-3">
+                Admin Panel
+            </a>
             <a href="/shoppingCart" class="btn btn-outline-primary position-relative me-3">
-                <i class="bi bi-cart"></i> <!-- Bootstrap Icons Cart Icon -->
+                <i class="bi bi-cart"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        <span th:text="${cartItemCount}">0</span>
+                        <span id="cartItemCount" th:text="${cartItemCount}">0</span>
                         <span class="visually-hidden">items in cart</span>
                     </span>
             </a>
         </div>
         <div class="d-flex ms-auto">
+            <a sec:authorize="isAuthenticated()" th:href="@{/profile/view}" class="btn btn-outline-primary mt-2 me-3">
+                User Profile
+            </a>
             <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-primary mt-2">
                 Login
             </a>
@@ -90,10 +96,13 @@
                         <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Product Name</a>
                     </h5>
                     <p class="card-text" th:text="${product.unitPrice}">Price</p>
-                    <a th:href="@{'/shoppingCart/addProduct/{id}?redirectUrl=' + ${currentUrl}(id=${product.id})}"  class="col-md-1"
-                       th:if="${product.unitsInStock}>0">
-                        <button type="button" class="btn btn-primary">Add to Cart</button>
-                    </a>
+                    <button type="button"
+                            class="btn btn-primary"
+                            th:attr="data-product-id=${product.id}"
+                            onclick="addToCart(this)"
+                            th:if="${product.unitsInStock > 0}">
+                        Add to Cart
+                    </button>
                 </div>
             </div>
         </div>
@@ -163,6 +172,28 @@
 </div>
 
 
+<script th:inline="javascript">
+    function addToCart(button) {
+        const productId = button.getAttribute('data-product-id').trim();
+        const url = `/shoppingCart/addProductToCart/${productId}`;
 
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update cart count
+            document.getElementById('cartItemCount').textContent = data.cartItemCount;
+            // You can add more UI updates here, like showing a success message
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle errors, maybe show an error message to the user
+        });
+    }
+</script>
 </body>
 </html>

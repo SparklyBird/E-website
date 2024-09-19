@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/payment/secure")
-public class PaymentController {
+public class PaymentRestController {
     private final UserService userService;
     private final PaymentService paymentService;
 
     @Autowired
-    public PaymentController(UserService userService, PaymentService paymentService) {
+    public PaymentRestController(UserService userService, PaymentService paymentService) {
         this.userService = userService;
         this.paymentService = paymentService;
     }

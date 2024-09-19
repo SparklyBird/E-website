@@ -10,9 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +36,7 @@ public class ShoppingCartController {
     @GetMapping
     public String shoppingCart(HttpServletRequest request, Model theModel) {
         theModel.addAttribute("cartItemCount", shoppingCartService.count());
+        System.out.println(shoppingCartService.count());
 
         String currentUrl = request.getRequestURI();
         if (request.getQueryString() != null) {
@@ -55,25 +60,55 @@ public class ShoppingCartController {
         return "shoppingCart/shoppingCart";
     }
 
-    @GetMapping("/addProduct/{productId}")
-    public String addProductToCart(@PathVariable("productId") Long productId,
-                                   @RequestParam("redirectUrl") String redirectUrl) {
+    @PostMapping("/addProductToCart/{productId}")
+    @ResponseBody
+    public Map<String, Object> addProductToCart(@PathVariable("productId") Long productId) {
         shoppingCartService.addProduct(productService.findById(productId));
-        return "redirect:" + redirectUrl;
+        Map<String, Object> response = new HashMap<>();
+        response.put("cartItemCount", shoppingCartService.count());
+        return response;
     }
 
-    @GetMapping("/removeProduct/{productId}")
-    public String removeProductFromCart(@PathVariable("productId") Long productId,
-                                        @RequestParam("redirectUrl") String redirectUrl) {
+    @PostMapping("/addProduct/{productId}")
+    @ResponseBody
+    public Map<String, Object> addProduct(@PathVariable("productId") Long productId) {
+        shoppingCartService.addProduct(productService.findById(productId));
+        return getCartUpdateResponse();
+    }
+
+    @PostMapping("/removeProduct/{productId}")
+    @ResponseBody
+    public Map<String, Object> removeProduct(@PathVariable("productId") Long productId) {
         shoppingCartService.removeProduct(productService.findById(productId));
-        return "redirect:" + redirectUrl;
+        return getCartUpdateResponse();
     }
 
-    @GetMapping("/decreaseProduct/{productId}")
-    public String decreaseroductFromCart(@PathVariable("productId") Long productId,
-                                         @RequestParam("redirectUrl") String redirectUrl) {
+    @PostMapping("/decreaseProduct/{productId}")
+    @ResponseBody
+    public Map<String, Object> decreaseProduct(@PathVariable("productId") Long productId) {
         shoppingCartService.decreaseProduct(productService.findById(productId));
-        return "redirect:" + redirectUrl;
+        return getCartUpdateResponse();
+    }
+
+    private Map<String, Object> getCartUpdateResponse() {
+        Map<String, Object> response = new HashMap<>();
+        System.out.println(shoppingCartService.count());
+        response.put("cartItemCount", shoppingCartService.count());
+        response.put("totalPrice", shoppingCartService.getTotalPrice());
+        response.put("cartItems", shoppingCartService.getProductsInCart().entrySet().stream()
+                .map(entry -> {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("id", entry.getKey().getId());
+                    item.put("name", entry.getKey().getName());
+                    item.put("imageUrl", entry.getKey().getImageUrl());
+                    item.put("price", entry.getKey().getUnitPrice());
+                    item.put("quantity", entry.getValue());
+                    item.put("total", entry.getKey().getUnitPrice().multiply(BigDecimal.valueOf(entry.getValue())));
+                    item.put("unitsInStock", entry.getKey().getUnitsInStock());
+                    return item;
+                })
+                .collect(Collectors.toList()));
+        return response;
     }
 
 }

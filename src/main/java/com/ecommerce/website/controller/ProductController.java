@@ -34,13 +34,7 @@ public class ProductController {
     @GetMapping("/category/{id}")
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "24") int size,
-                                        HttpServletRequest request, Model model) {
-        String currentUrl = request.getRequestURI();
-        if (request.getQueryString() != null) {
-            currentUrl += "?" + request.getQueryString();
-        }
-        model.addAttribute("currentUrl", currentUrl);
+                                        @RequestParam(defaultValue = "24") int size, Model model) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productService.getProductsByCategory(id, pageable);
@@ -61,6 +55,7 @@ public class ProductController {
     public String getProductDetails(@PathVariable Long id, Model model) {
         Product product = productService.getProductByIdWithAttributes(id);
         model.addAttribute("product", product);
+        model.addAttribute("cartItemCount", shoppingCartService.count());
         return "product/productDetails";
     }
 }

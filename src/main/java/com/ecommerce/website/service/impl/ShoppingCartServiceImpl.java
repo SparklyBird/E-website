@@ -62,7 +62,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 if (cart.getCartItem().isEmpty()) {
                     addingProductsToCart(cart);
                 } else {
-                    addingProductsToExistingCart(cart);
+                    addingProductsToExistingCart(cart, true);
                 }
             }
             if (!cart.getCartItem().isEmpty()) {
@@ -107,8 +107,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void checkout() {
-
+    public void checkout(User user) {
+        this.products.clear();
+        if (user != null) {
+            Cart cart = getOrCreateCart(user);
+            cartRepository.delete(cart);
+        }
     }
 
     @Override
@@ -152,14 +156,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartRepository.save(cart);
     }
 
-    private void addingProductsToExistingCart(Cart cart) {
+    private void addingProductsToExistingCart(Cart cart, Boolean init) {
         Map<Product, CartItem> existingCartItems = cart.getCartItem().stream()
                 .collect(Collectors.toMap(CartItem::getProduct, cartItem -> cartItem));
 
         products.forEach((product, quantity) -> {
             CartItem cartItem = existingCartItems.get(product);
             if (cartItem != null) {
-                cartItem.setQuantity(quantity + cartItem.getQuantity());
+                if (init)
+                    cartItem.setQuantity(quantity + cartItem.getQuantity());
+                else
+                    cartItem.setQuantity(quantity);
             } else {
                 cartItem = new CartItem();
                 cartItem.setProduct(product);
@@ -184,7 +191,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (cart.getCartItem().isEmpty()) {
             addingProductsToCart(cart);
         } else {
-            addingProductsToExistingCart(cart);
+            addingProductsToExistingCart(cart, false);
         }
     }
 
@@ -206,6 +213,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (cartItemToRemove != null) {
             cart.getCartItem().remove(cartItemToRemove);
             cartItemRepository.delete(cartItemToRemove);
+            System.out.println("deleting cartitem");
             cartRepository.save(cart);
         }
     }

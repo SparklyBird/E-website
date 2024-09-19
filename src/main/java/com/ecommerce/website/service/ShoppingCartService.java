@@ -1,6 +1,7 @@
 package com.ecommerce.website.service;
 
 import com.ecommerce.website.model.base.Product;
+import com.ecommerce.website.model.user.User;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -14,7 +15,7 @@ public interface ShoppingCartService {
 
     Map<Product, Integer> getProductsInCart();
 
-    void checkout();
+    void checkout(User user);
 
     BigDecimal getTotalPrice();
 

@@ -26,56 +26,43 @@
     </div>
 </div>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/}">Homepage</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/1}">Books</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/2}">Coffee Mugs</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/3}">Mouse Pads</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/4}">Luggage Tags</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/5}">Apparel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/6}">Footwear</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('ADMIN') or hasRole('USER')">
-                    <a class="nav-link" th:href="@{/order}">Order</a>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" th:each="category : ${categories}">
+                    <a class="nav-link" th:href="@{/products/category/{id}(id=${category.id})}" th:text="${category.name}"></a>
                 </li>
             </ul>
-        </div>
-        <div class="d-flex ms-auto">
-            <a href="/shoppingCart" class="btn btn-outline-primary position-relative me-3">
-                <i class="bi bi-cart"></i> <!-- Bootstrap Icons Cart Icon -->
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        <span th:text="${cartItemCount}">0</span>
+            <div class="d-flex align-items-center">
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="btn btn-outline-danger me-2">
+                    Admin Panel
+                </a>
+                <a th:href="@{/shoppingCart}" class="btn btn-outline-light position-relative me-2">
+                    <i class="bi bi-cart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <span id="cartItemCount" th:text="${cartItemCount}">0</span>
                         <span class="visually-hidden">items in cart</span>
                     </span>
-            </a>
-        </div>
-        <div class="d-flex ms-auto">
-            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-primary mt-2">
-                Login
-            </a>
-            <form sec:authorize="isAuthenticated()" action="#" th:action="@{/auth/logout}" method="POST">
-                <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
-            </form>
+                </a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/order}" class="btn btn-outline-light me-2">
+                    Order
+                </a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/profile/view}" class="btn btn-outline-light me-2">
+                    Profile
+                </a>
+
+                <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-light me-2">
+                    Login
+                </a>
+                <form sec:authorize="isAuthenticated()" th:action="@{/auth/logout}" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 </nav>
@@ -83,7 +70,14 @@
 
 
 <div class="container">
-    <h1>Orders</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order</li>
+        </ol>
+    </nav>
+
     <table class="table table-bordered table-striped">
 
         <thead class="table-dark">
@@ -101,7 +95,7 @@
         <tbody>
         <tr th:each="order : ${orders}">
             <td th:text="${order.orderTrackingNumber}" />
-            <td th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}" />
+            <td th:text="${'$' + #numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}" />
             <td th:text="${order.totalQuantity}" />
             <td th:text="${order.status}" />
             <td th:text="${#dates.format(order.dateCreated, 'dd-MM-yyyy HH:mm:ss')}" />

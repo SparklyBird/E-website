@@ -39,53 +39,43 @@
     </div>
 </div>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/}">Homepage</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/1}">Books</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/2}">Coffee Mugs</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/3}">Mouse Pads</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/4}">Luggage Tags</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/5}">Apparel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products/category/6}">Footwear</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" th:href="@{/admin}">Admin Panel</a>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" th:each="category : ${categories}">
+                    <a class="nav-link" th:href="@{/products/category/{id}(id=${category.id})}" th:text="${category.name}"></a>
                 </li>
             </ul>
-        </div>
-        <div class="d-flex ms-auto">
-            <a href="/shoppingCart" class="btn btn-outline-primary position-relative me-3">
-                <i class="bi bi-cart"></i> <!-- Bootstrap Icons Cart Icon -->
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    <span th:text="${cartItemCount}">0</span>
-                    <span class="visually-hidden">items in cart</span>
-                </span>
-            </a>
-        </div>
-        <div class="d-flex ms-auto">
-            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-primary mt-2">
-                Login
-            </a>
-            <form sec:authorize="isAuthenticated()" action="#" th:action="@{/auth/logout}" method="POST">
-                <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
-            </form>
+            <div class="d-flex align-items-center">
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="btn btn-outline-danger me-2">
+                    Admin Panel
+                </a>
+                <a th:href="@{/shoppingCart}" class="btn btn-outline-light position-relative me-2">
+                    <i class="bi bi-cart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <span id="cartItemCount" th:text="${cartItemCount}">0</span>
+                        <span class="visually-hidden">items in cart</span>
+                    </span>
+                </a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/order}" class="btn btn-outline-light me-2">
+                    Order
+                </a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/profile/view}" class="btn btn-outline-light me-2">
+                    Profile
+                </a>
+
+                <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-light me-2">
+                    Login
+                </a>
+                <form sec:authorize="isAuthenticated()" th:action="@{/auth/logout}" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 </nav>
@@ -111,7 +101,7 @@
                      alt="Product image"
                      style="max-width: 95px; height: auto;">
             </td>
-            <td th:text="${cartItem.product.unitPrice}"></td>
+            <td th:text="${'$' + #numbers.formatDecimal(cartItem.product.unitPrice, 1, 2)}"></td>
             <td>
                 <div class="input-group flex-column">
                     <div class="d-flex mb-2">
@@ -125,11 +115,11 @@
                     </div>
                 </div>
             </td>
-            <td th:text="${cartItem.product.unitPrice * cartItem.quantity}" class="item-total"></td>
+            <td th:text="${'$' +cartItem.product.unitPrice * cartItem.quantity}" class="item-total"></td>
         </tr>
         </tbody>
     </table>
-    <p>Total price: <span id="totalPrice" th:text="${#numbers.formatDecimal(totalPrice, 1, 'COMMA', 2, 'POINT')}"></span></p>
+    <p>Total price: <span id="totalPrice" th:text="${'$' + #numbers.formatDecimal(totalPrice, 1, 2)}"></span></p>
 
     <a th:href="@{/checkout}" id="checkoutButton" th:classappend="${cartItemCount > 0 ? '' : 'disabled'}">
         <button type="button" class="btn btn-primary" th:disabled="${cartItemCount == 0}">Checkout</button>
@@ -158,7 +148,7 @@
                 var row = $('<tr>').attr('data-product-id', item.id);
                 row.append($('<td>').text(item.name));
                 row.append($('<td>').html('<img class="img-thumbnail" src="' + item.imageUrl + '" alt="Product image" style="max-width: 95px; height: auto;">'));
-                row.append($('<td>').text(item.price));
+                row.append($('<td>').text('$' +item.price));
 
                 var quantityCell = $('<td>');
                 var quantityGroup = $('<div>').addClass('input-group flex-column');
@@ -171,19 +161,16 @@
                 quantityCell.append(quantityGroup);
                 row.append(quantityCell);
 
-                row.append($('<td>').addClass('item-total').text(item.total));
+                row.append($('<td>').addClass('item-total').text('$' +item.total));
                 $('#cartTable tbody').append(row);
             });
 
-            $('#totalPrice').text(response.totalPrice.toFixed(2));
+            $('#totalPrice').text('$' +response.totalPrice.toFixed(2));
             $('.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger').text(response.cartItemCount);
 
             if (response.cartItemCount > 0) {
-                console.log(response.cartItemCount);
                 $('#checkoutButton').removeClass('disabled').find('button').prop('disabled', false);
             } else {
-                console.log("in else");
-                console.log(response.cartItemCount);
                 $('#checkoutButton').addClass('disabled').find('button').prop('disabled', true);
             }
         }

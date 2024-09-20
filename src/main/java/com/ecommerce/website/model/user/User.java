@@ -143,6 +143,10 @@ public class User implements UserDetails {
         this.profile = profile;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
     public void setLogin(String login) {
         this.login = login;
     }

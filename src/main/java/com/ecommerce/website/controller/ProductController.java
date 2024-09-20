@@ -1,10 +1,10 @@
 package com.ecommerce.website.controller;
 
+import com.ecommerce.website.dao.base.CategoryRepository;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.service.CategoryService;
 import com.ecommerce.website.service.ProductService;
 import com.ecommerce.website.service.ShoppingCartService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,12 +23,14 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final ShoppingCartService shoppingCartService;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService, ShoppingCartService shoppingCartService) {
+    public ProductController(ProductService productService, CategoryService categoryService, ShoppingCartService shoppingCartService, CategoryRepository categoryRepository) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.shoppingCartService = shoppingCartService;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping("/category/{id}")
@@ -48,6 +50,7 @@ public class ProductController {
         model.addAttribute("categoryName", categoryName);
 
         model.addAttribute("cartItemCount", shoppingCartService.count());
+        model.addAttribute("categories", categoryRepository.findAll());
         return "product/productList";
     }
 
@@ -56,6 +59,7 @@ public class ProductController {
         Product product = productService.getProductByIdWithAttributes(id);
         model.addAttribute("product", product);
         model.addAttribute("cartItemCount", shoppingCartService.count());
+        model.addAttribute("categories", categoryRepository.findAll());
         return "product/productDetails";
     }
 }

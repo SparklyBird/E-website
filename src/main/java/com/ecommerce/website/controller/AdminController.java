@@ -142,7 +142,8 @@ public class AdminController {
 
                 product.setImageUrl("/images/" + fileName);
             }
-
+            product.setActive(true);
+            product.setUnitsInStock(1);
             adminService.saveProduct(product);
             redirectAttributes.addFlashAttribute("message", "Product added successfully");
             return "redirect:/admin";

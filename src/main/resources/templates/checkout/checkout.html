@@ -93,26 +93,28 @@
                     <h5 class="card-title">Order Summary</h5>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center" th:each="entry : ${cart}">
-                            <div>
+                            <div style="width: 45%;">
                                 <span th:text="${entry.key.name}">Product Name</span>
                                 <span class="text-muted" th:text="'x' + ${entry.value}">x Quantity</span>
                             </div>
-                            <div>
+                            <div style="width: 35%;">
                                 <img class="img-thumbnail"
                                      th:src="${entry.key.imageUrl}"
                                      alt="Product image"
                                      style="max-width: 95px; height: auto;">
                             </div>
-                            <span th:text="${#numbers.formatDecimal(entry.key.unitPrice.multiply(new java.math.BigDecimal(entry.value)), 1, 2)}">Price</span>
+                            <div style="width: 20%;">
+                                <span th:text="${'$' + #numbers.formatDecimal(entry.key.unitPrice.multiply(new java.math.BigDecimal(entry.value)), 1, 2)}">Price</span>
+                            </div>
                         </li>
                     </ul>
                     <div class="d-flex justify-content-between mt-3">
                         <strong>Shipping cost:</strong>
-                        <strong th:text="${shippingPrice}">Shipping cost</strong>
+                        <strong th:text="${'$' +shippingPrice}">Shipping cost</strong>
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <strong>Total:</strong>
-                        <strong th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">Total Price</strong>
+                        <strong th:text="${'$' + #numbers.formatDecimal(totalPrice, 1, 2)}">Total Price</strong>
                     </div>
                 </div>
             </div>

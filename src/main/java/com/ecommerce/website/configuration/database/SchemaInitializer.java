@@ -21,9 +21,9 @@ public class SchemaInitializer {
 
     @PostConstruct
     public void initialize() {
- //      executeSchemaScript(userDataSource, "schema-user.sql");
- //       executeSchemaScript(baseDataSource, "schema-base-product-and-categories.sql");
- //       executeSchemaScript(baseDataSource, "schema-base-attributes.sql");
+//        executeSchemaScript(userDataSource, "schema-user.sql");
+//        executeSchemaScript(baseDataSource, "schema-base-product-and-categories.sql");
+//        executeSchemaScript(baseDataSource, "schema-base-attributes.sql");
     }
 
     private void executeSchemaScript(DataSource dataSource, String script) {

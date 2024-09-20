@@ -27,7 +27,7 @@ public class OrderItem {
     private BigDecimal unitPrice;
     @Column(name = "quantity")
     private int quantity;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
     @ManyToOne

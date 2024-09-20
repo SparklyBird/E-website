@@ -1,5 +1,6 @@
 package com.ecommerce.website.controller;
 
+import com.ecommerce.website.dao.base.CategoryRepository;
 import com.ecommerce.website.model.base.Order;
 import com.ecommerce.website.model.user.User;
 import com.ecommerce.website.service.OrderItemService;
@@ -24,15 +25,15 @@ import static java.util.Optional.ofNullable;
 public class OrderController {
     private final ShoppingCartService shoppingCartService;
     private final OrderService orderService;
-    private final OrderItemService orderItemService;
     private final UserService userService;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public OrderController(ShoppingCartService shoppingCartService, OrderService orderService, OrderItemService orderItemService, UserService userService) {
+    public OrderController(ShoppingCartService shoppingCartService, OrderService orderService, UserService userService, CategoryRepository categoryRepository) {
         this.shoppingCartService = shoppingCartService;
         this.orderService = orderService;
-        this.orderItemService = orderItemService;
         this.userService = userService;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
@@ -44,6 +45,7 @@ public class OrderController {
 
         theModel.addAttribute("orders", orders);
         theModel.addAttribute("cartItemCount", shoppingCartService.count());
+        theModel.addAttribute("categories", categoryRepository.findAll());
         return "order/order";
     }
 
@@ -61,6 +63,7 @@ public class OrderController {
         theModel.addAttribute("totalPrice", order.getTotalPrice());
         theModel.addAttribute("orderItems", order.getOrderItems());
         theModel.addAttribute("cartItemCount", shoppingCartService.count());
+        theModel.addAttribute("categories", categoryRepository.findAll());
         return "order/order-item";
     }
 }

@@ -1,10 +1,10 @@
 package com.ecommerce.website.controller;
 
+import com.ecommerce.website.dao.base.CategoryRepository;
 import com.ecommerce.website.model.base.CartItem;
 import com.ecommerce.website.model.base.Product;
 import com.ecommerce.website.service.ProductService;
 import com.ecommerce.website.service.ShoppingCartService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
@@ -26,23 +25,20 @@ import java.util.stream.Collectors;
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
     private final ProductService productService;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ShoppingCartController(ShoppingCartService shoppingCartService, ProductService productService) {
+    public ShoppingCartController(ShoppingCartService shoppingCartService, ProductService productService, CategoryRepository categoryRepository) {
         this.shoppingCartService = shoppingCartService;
         this.productService = productService;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
-    public String shoppingCart(HttpServletRequest request, Model theModel) {
-        theModel.addAttribute("cartItemCount", shoppingCartService.count());
-        System.out.println(shoppingCartService.count());
+    public String shoppingCart(Model theModel) {
+        theModel.addAttribute("categories", categoryRepository.findAll());
 
-        String currentUrl = request.getRequestURI();
-        if (request.getQueryString() != null) {
-            currentUrl += "?" + request.getQueryString();
-        }
-        theModel.addAttribute("currentUrl", currentUrl);
+        theModel.addAttribute("cartItemCount", shoppingCartService.count());
 
         Map<Product, Integer> productsInCart = shoppingCartService.getProductsInCart();
         List<CartItem> cartItemList = productsInCart.entrySet().stream()

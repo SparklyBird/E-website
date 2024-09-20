@@ -1,5 +1,6 @@
 package com.ecommerce.website.controller;
 
+import com.ecommerce.website.dao.base.CategoryRepository;
 import com.ecommerce.website.dto.Purchase;
 import com.ecommerce.website.model.base.Customer;
 import com.ecommerce.website.model.base.OrderItem;
@@ -27,15 +28,17 @@ import java.util.Map;
 public class CheckoutController {
     private final ShoppingCartService shoppingCartService;
     private final UserService userService;
+    private final CategoryRepository categoryRepository;
     @Value("${stripe.key.public}")
     private String stripePublicKey;
     @Value("${shipping.price}")
     private String shippingPrice;
 
     @Autowired
-    public CheckoutController(ShoppingCartService shoppingCartService, UserService userService) {
+    public CheckoutController(ShoppingCartService shoppingCartService, UserService userService, CategoryRepository categoryRepository) {
         this.shoppingCartService = shoppingCartService;
         this.userService = userService;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
@@ -80,6 +83,7 @@ public class CheckoutController {
         theModel.addAttribute("totalPrice", shoppingCartService.getTotalPrice().add(price));
         theModel.addAttribute("shippingPrice", shippingPrice);
         theModel.addAttribute("stripePublicKey", stripePublicKey);
+        theModel.addAttribute("categories", categoryRepository.findAll());
         return "/checkout/checkout";
     }
 }

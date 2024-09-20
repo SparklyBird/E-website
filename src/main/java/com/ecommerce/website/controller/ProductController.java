@@ -82,7 +82,8 @@ public class ProductController {
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("currentPage", page);
         model.addAttribute("query", query);
-
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("cartItemCount", shoppingCartService.count());
         return "product/searchResults";
     }
 

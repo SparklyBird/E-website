@@ -1,0 +1,55 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<section th:fragment="footer">
+    <nav class="footer">
+        <div class="footer bg-dark text-light py-4 mt-5">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="col-md-2">
+                        <a th:href="@{/}">
+                            <img th:src="@{/images/logo_circle.png}" alt="Logo" style="max-width: 120px; max-height: 120px;">
+                        </a>
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <h5>Contacts</h5>
+                                <p>
+                                    Address: Brīvības iela 214, Rīga, LV-1039<br>
+                                    Email: info@shop.com<br>
+                                    Phone: (+371) 67 019 700
+                                </p>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <h5>Categories</h5>
+                                <ul class="list-unstyled">
+                                    <li><a class="text-light" th:href="@{/products/category/1}">Books</a></li>
+                                    <li><a class="text-light" th:href="@{/products/category/2}">Coffee Mugs</a></li>
+                                    <li><a class="text-light" th:href="@{/products/category/3}">Mouse Pads</a></li>
+                                    <li><a class="text-light" th:href="@{/products/category/4}">Luggage Tags</a></li>
+                                    <li><a class="text-light" th:href="@{/products/category/5}">Apparel</a></li>
+                                    <li><a class="text-light" th:href="@{/products/category/6}">Footwear</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <h5>Info</h5>
+                                <ul class="list-unstyled">
+                                    <li><a class="text-light" th:href="@{/about-us}">About Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row text-center mt-3">
+                    <div class="col-md-12">
+                        <p class="mb-0">&copy; 2024 Z.A.N.K. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</section>
+</html>

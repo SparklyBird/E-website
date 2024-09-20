@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/products")
@@ -52,6 +56,34 @@ public class ProductController {
         model.addAttribute("cartItemCount", shoppingCartService.count());
         model.addAttribute("categories", categoryRepository.findAll());
         return "product/productList";
+    }
+
+//    @GetMapping("/suggest")
+//    public ResponseEntity<List<String>> getSuggestions(@RequestParam("query") String query) {
+//        List<String> suggestions = productService.getSuggestions(query);
+//        return ResponseEntity.ok(suggestions);
+//    }
+
+    @GetMapping("/products/suggestions")
+    @ResponseBody
+    public List<String> getSuggestions(@RequestParam("query") String query) {
+        return productService.getSuggestions(query);
+    }
+
+    @GetMapping("/search")
+    public String searchProducts(@RequestParam("query") String query,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "24") int size,
+                                 Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productService.searchProducts(query, pageable);
+
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("query", query);
+
+        return "product/searchResults";
     }
 
     @GetMapping("/{id}")

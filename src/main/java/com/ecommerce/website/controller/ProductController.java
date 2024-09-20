@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,20 +35,33 @@ public class ProductController {
     @GetMapping("/category/{id}")
     public String getProductsByCategory(@PathVariable Long id,
                                         @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "24") int size, Model model) {
+                                        @RequestParam(defaultValue = "24") int size,
+                                        @RequestParam(required = false) String sortField,
+                                        @RequestParam(required = false) String sortDirection,
+                                        Model model) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable;
+
+        if (sortField != null && sortDirection != null) {
+            Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size);
+        }
+
         Page<Product> productPage = productService.getProductsByCategory(id, pageable);
 
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("currentPage", page);
         model.addAttribute("categoryId", id);
+        model.addAttribute("sortField", sortField);  // Will be null if no sorting applied
+        model.addAttribute("sortDirection", sortDirection);  // Will be null if no sorting applied
 
         String categoryName = categoryService.getCategoryNameById(id);
         model.addAttribute("categoryName", categoryName);
-
         model.addAttribute("cartItemCount", shoppingCartService.count());
+
         return "product/productList";
     }
 

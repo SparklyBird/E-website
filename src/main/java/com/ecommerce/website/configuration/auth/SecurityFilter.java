@@ -70,18 +70,5 @@ public class SecurityFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         return (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
     }
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/", "/home", "/about-us", "/products/**", "/fragments/**", "/images/**", "/css/**", "/js/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(form -> form
-//                        .loginPage("/auth/login").permitAll()
-//                )
-//                .logout(logout -> logout.permitAll());
-//
-//        return http.build();
-//    }
+
 }

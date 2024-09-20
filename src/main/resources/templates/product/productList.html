@@ -13,7 +13,7 @@
 <div class="d-flex align-items-center w-100">
     <div class="me-3">
         <a th:href="@{/}">
-            <img th:src="@{/images/logo.png}" alt="Logo" style="max-width: 70px; max-height: 70px;">
+            <img th:src="@{/images/logo.png}" alt="Logo" style="max-width: 170px; max-height: 170px;">
         </a>
     </div>
     <div class="flex-grow-1">
@@ -80,7 +80,21 @@
     </div>
 </nav>
 
+
 <div class="container">
+    <div class="sort-options">
+        <span>Sort By:</span>
+        <a th:href="@{/products/category/{id}(id=${categoryId}, sortField='name', sortDirection=${sortDirection == 'ASC' ? 'DESC' : 'ASC'})}">
+            Name <span th:text="${sortField == 'name' ? (sortDirection == 'ASC' ? '⬆' : '⬇') : ''}"></span>
+        </a> |
+        <a th:href="@{/products/category/{id}(id=${categoryId}, sortField='price', sortDirection=${sortDirection == 'ASC' ? 'DESC' : 'ASC'})}">
+            Price <span th:text="${sortField == 'price' ? (sortDirection == 'ASC' ? '⬆' : '⬇') : ''}"></span>
+        </a> |
+        <a th:href="@{/products/category/{id}(id=${categoryId}, sortField='popularity', sortDirection=${sortDirection == 'ASC' ? 'DESC' : 'ASC'})}">
+            Popularity <span th:text="${sortField == 'popularity' ? (sortDirection == 'ASC' ? '⬆' : '⬇') : ''}"></span>
+        </a>
+    </div>
+
     <h1 th:text="${categoryName}"></h1>
     <div class="row row-cols-1 row-cols-md-4 g-4">
         <div class="col" th:each="product : ${products}">
@@ -109,58 +123,44 @@
     </div>
 </div>
 
-<!--<div class="pagination">-->
-<!--    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">-->
-<!--        <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}"-->
-<!--           th:text="${i + 1}"></a>-->
-<!--    </span>-->
-<!--</div>-->
 <div class="pagination-container d-flex justify-content-center">
     <nav>
         <ul class="pagination">
 
-            <!-- Previous Arrow -->
             <li th:if="${currentPage > 0}" class="page-item">
                 <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${currentPage - 1})}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
-            <!-- Show all pages if total pages <= 6 -->
             <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                 th:if="${totalPages <= 6}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
                 <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
-            <!-- First 3 pages -->
             <li th:each="i : ${#numbers.sequence(0, 2)}"
                 th:if="${totalPages > 6}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
                 <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
-            <!-- Dots after first 3 pages if necessary -->
             <li th:if="${currentPage > 3 && totalPages > 6}" class="page-item">
                 <span class="page-link">...</span>
             </li>
 
-            <!-- Pages around current page -->
             <li th:each="i : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
                 th:if="${currentPage > 2 && currentPage < totalPages - 3}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
                 <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
-            <!-- Dots before last 3 pages if necessary -->
             <li th:if="${currentPage < totalPages - 4 && totalPages > 6}" class="page-item">
                 <span class="page-link">...</span>
             </li>
 
-            <!-- Last 3 pages -->
             <li th:each="i : ${#numbers.sequence(totalPages - 3, totalPages - 1)}"
                 th:if="${totalPages > 6}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
                 <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${i})}" th:text="${i + 1}"></a>
             </li>
 
-            <!-- Next Arrow -->
             <li th:if="${currentPage < totalPages - 1}" class="page-item">
                 <a class="page-link" th:href="@{/products/category/{id}(id=${categoryId}, page=${currentPage + 1})}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>

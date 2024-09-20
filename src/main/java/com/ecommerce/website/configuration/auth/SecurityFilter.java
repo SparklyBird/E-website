@@ -15,6 +15,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+
 
 import java.io.IOException;
 import java.util.Optional;
@@ -64,4 +70,18 @@ public class SecurityFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         return (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
     }
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/", "/home", "/about-us", "/products/**", "/fragments/**", "/images/**", "/css/**", "/js/**").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(form -> form
+//                        .loginPage("/auth/login").permitAll()
+//                )
+//                .logout(logout -> logout.permitAll());
+//
+//        return http.build();
+//    }
 }

@@ -27,6 +27,8 @@ Then you should be able to access it under http://localhost:8080/ and see homepa
 
 For login you can use admin "admin@gmail.com" and regular "user@gmail.com" user, both have the password "nimda"
 
-This is 
-Working on this project:
+Note:
+If you want to be able to pay with stripe and see your results, add your stripe public and secret key.
+
+People Working on this project:
 - Zigmunds, Nikolajs, Jekatarina, Amnander 

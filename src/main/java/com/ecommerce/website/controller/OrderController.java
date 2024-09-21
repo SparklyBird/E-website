@@ -58,7 +58,7 @@ public class OrderController {
 
         Order order = orderService.getOrderById((long) orderId);
         if (user.getId() != order.getUserId()) {
-            return "/access-denied";
+            return "redirect:/access-denied";
         }
         theModel.addAttribute("totalPrice", order.getTotalPrice());
         theModel.addAttribute("orderItems", order.getOrderItems());
